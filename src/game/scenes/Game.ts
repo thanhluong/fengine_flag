@@ -1,5 +1,4 @@
 import { Scene, Physics } from 'phaser';
-import { EventBus } from '../EventBus';
 import ComponentService from '../../service/ComponentService';
 import KeyboardMovement from '../../components/KeyboardMovement';
 import KeyboardAnimation from '../../components/KeyboardAnimation';
@@ -85,7 +84,7 @@ export class Game extends Scene {
     this.components.addComponent(this.player, this.inputBomb);
     this.inputComponent = new InputComponent(this.fences);
     this.components.addComponent(this.player, this.inputComponent);
-    EventBus.emit('current-scene-ready', this);
+    // EventBus.emit('current-scene-ready', this);
   }
   update(_: number, dt: number): void {
     if (this.ok) {
