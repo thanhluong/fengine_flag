@@ -26,6 +26,7 @@ export class Game extends Scene {
   fences: Phaser.Tilemaps.TilemapLayer;
   grass: Phaser.Tilemaps.TilemapLayer;
   bombs: Physics.Arcade.StaticGroup;
+  bombs2: Physics.Arcade.StaticGroup;
   userInput: string = '';
   inputComponent: InputComponent;
   inputComponent2: InputComponent;
@@ -42,6 +43,7 @@ export class Game extends Scene {
     this.load.image('grass-ts', 'Tilemap/Grass.png');
     this.load.image('fences-ts', 'Tilemap/Fences.png');
     this.load.image('bomb', 'Character/bomb.png');
+    this.load.image('flag-blue', 'Character/flag-blue.png');
     this.load.spritesheet('cute1', 'Character/cute1.png', {
       frameWidth: 48,
       frameHeight: 48,
@@ -80,7 +82,7 @@ export class Game extends Scene {
       .setBodySize(this.player2.width / 3, this.player2.height / 3)
       .setDepth(10);
     this.cursors = this.input.keyboard?.createCursorKeys()!;
-    // this.bombs = this.physics.add.staticGroup({ classType: Bomb });
+    this.bombs2 = this.physics.add.staticGroup({ classType: Bomb });
 
     // Implement collision
     this.fences?.setCollisionByProperty({ collide: true });
@@ -104,7 +106,7 @@ export class Game extends Scene {
       this.player1,
       new KeyboardAnimation(this.cursors, 'cute1')
     );
-    this.inputBomb = new InputBomb(this.bombs, this.player2);
+    this.inputBomb = new InputBomb(this.bombs, this.player2, 'bomb');
     this.components.addComponent(this.player1, this.inputBomb);
     this.inputComponent = new InputComponent(this.fences);
     this.components.addComponent(this.player1, this.inputComponent);
@@ -120,13 +122,13 @@ export class Game extends Scene {
     );
     this.components.addComponent(
       this.player2,
-      new BombSpawn(this.cursors, this.bombs)
+      new BombSpawn(this.cursors, this.bombs2)
     );
     this.components.addComponent(
       this.player2,
       new KeyboardAnimation(this.cursors, 'cute1')
     );
-    this.inputBomb2 = new InputBomb(this.bombs, this.player1);
+    this.inputBomb2 = new InputBomb(this.bombs2, this.player1, 'flag-blue');
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
