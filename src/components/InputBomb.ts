@@ -6,11 +6,16 @@ import Bomb from '../gameobjects/Bomb';
 export default class InputBomb implements IComponent {
   private userInput: string = '';
   private gameObject: Phaser.Physics.Arcade.Sprite;
+  private enemy: Phaser.Physics.Arcade.Sprite;
   private stateMachine: StateMachine;
   private scene: Scene;
   bombs: Physics.Arcade.StaticGroup;
-  constructor(bombs: Physics.Arcade.StaticGroup) {
+  constructor(
+    bombs: Physics.Arcade.StaticGroup,
+    enemy: Phaser.Physics.Arcade.Sprite
+  ) {
     this.bombs = bombs;
+    this.enemy = enemy;
     this.stateMachine = new StateMachine(this, 'bomb_spawn');
   }
   init(go: Phaser.GameObjects.GameObject) {
@@ -36,26 +41,36 @@ export default class InputBomb implements IComponent {
     }
   }
   spawnOnEnter() {
+    if (this.checkEnemyAt(this.gameObject.x, this.gameObject.y)) return;
+    if (this.checkBombAt(this.gameObject.x, this.gameObject.y)) return;
     const bomb = new Bomb(
       this.scene,
       this.gameObject.x,
       this.gameObject.y,
       'bomb'
     );
-
     this.bombs.add(bomb);
-
-    // this.scene.physics.add.overlap(
-    //   this.gameObject,
-    //   bomb.hitBox,
-    //   this.handleCollide.bind({ scene: this.scene, target: this.gameObject })
-    // );
-
     this.scene.time.delayedCall(1000, () => {
       this.stateMachine.setState('idle');
     });
   }
   importInput(inp: string) {
     this.userInput = inp;
+  }
+  checkBombAt(x: number, y: number) {
+    const bombs = this.bombs.getChildren();
+    let res = false;
+    bombs.forEach(b => {
+      const bomb = b as Phaser.Physics.Arcade.Sprite;
+      console.log(bomb);
+      if (bomb.x === x && bomb.y === y) {
+        console.log('Has bomb');
+        res = true;
+      }
+    });
+    return res;
+  }
+  checkEnemyAt(x: number, y: number) {
+    return this.enemy.x === x && this.enemy.y === y;
   }
 }
