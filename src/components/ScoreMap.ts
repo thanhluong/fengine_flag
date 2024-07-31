@@ -62,7 +62,7 @@ export class ScoreMap {
                     }
                     count++;
                 }
-                console.log(count, this.Scores[i][j]);
+              //  console.log(count, this.Scores[i][j]);
                 scene.add.rectangle(i * 16, j * 16, 16, 16, Phaser.Display.Color.GetColor(255, 80 + count * step, 0)).setOrigin(0, 0);
             }
         }

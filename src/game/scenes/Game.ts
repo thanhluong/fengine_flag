@@ -7,6 +7,7 @@ import BombSpawn from '../../components/BombSpawn';
 import InputComponent from '../../components/InputComponent';
 import InputBomb from '../../components/InputBomb';
 import {ScoreMap} from "../../components/ScoreMap.ts";
+import axios, {get} from 'axios';
 
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
@@ -18,6 +19,8 @@ export interface WASDKeys {
 
 const arr = ['L', 'R', 'U', 'D', 'X'];
 const tileSz = 16;
+const codeA = "#include<bits/stdc++.h>\nusing namespace std;typedef pair<int,int>ii;mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());int rand(int l,int r){return l+rd()%(r-l+1);};int main(){ios_base::sync_with_stdio(0);cin.tie(0);int x=rand(1,5);if(x==1)cout<<'L';else if(x==2)cout<<'R';else if(x==3)cout<<'U';else if(x==4)cout<<'D';else cout<<'X';}";
+const codeB = "#include<bits/stdc++.h>\nusing namespace std;typedef pair<int,int>ii;mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());int rand(int l,int r){return l+rd()%(r-l+1);};int main(){ios_base::sync_with_stdio(0);cin.tie(0);int x=rand(1,5);if(x==1)cout<<'U';else if(x==2)cout<<'U';else if(x==3)cout<<'U';else if(x==4)cout<<'U';else cout<<'X';}";
 
 export class Game extends Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -35,6 +38,7 @@ export class Game extends Scene {
   inputBomb: InputBomb;
   inputBomb2: InputBomb;
   ok: boolean = true;
+  output: string[] = [];
   constructor() {
     super('Game');
   }
@@ -55,8 +59,8 @@ export class Game extends Scene {
   create() {
     // const { width, height } = this.scale;
     // Create platform
+    this.CompileCode();
     const map = this.make.tilemap({ key: 'tilemap' });
-
     const grassTileset = map.addTilesetImage('Grass', 'grass-ts');
     const fencesTileset = map.addTilesetImage('Fences', 'fences-ts');
     this.grass = map.createLayer('grass', grassTileset!)!;
@@ -66,7 +70,6 @@ export class Game extends Scene {
     scoreMap.createMap(this);
     this.renderBorder(this.grass);
     // Create sprite
-
     // PLAYER 1
     this.player1 = this.physics.add.sprite(
       tileSz * 1 + tileSz * 0.5,
@@ -89,7 +92,6 @@ export class Game extends Scene {
       .setDepth(10);
     this.cursors = this.input.keyboard?.createCursorKeys()!;
     this.bombs2 = this.physics.add.staticGroup({ classType: Bomb });
-
     // Implement collision
     this.fences?.setCollisionByProperty({ collide: true });
     this.physics.add.collider(this.player1, this.fences);
@@ -143,12 +145,13 @@ export class Game extends Scene {
   update(_: number, dt: number): void {
     if (this.ok) {
       this.ok = false;
+      // this.getInputFromUser();
+      this.RunCode();
+      this.inputComponent.importInput(this.output[1]);
+      this.inputBomb.importInput(this.output[1]);
       this.getInputFromUser();
-      this.inputComponent.importInput(this.userInput);
-      this.inputBomb.importInput(this.userInput);
-      this.getInputFromUser();
-      this.inputComponent2.importInput(this.userInput);
-      this.inputBomb2.importInput(this.userInput);
+      this.inputComponent2.importInput(this.output[2]);
+      this.inputBomb2.importInput(this.output[2]);
       this.time.delayedCall(1000, () => {
         this.ok = true;
       });
@@ -171,5 +174,31 @@ export class Game extends Scene {
         debugGraphics.strokeRect(x, y, width, height);
       }
     });
+  }
+  async CompileCode()
+  {
+     const getBinary = async (code: string, name: string) => {
+       const response = await axios.post('http://178.128.123.34:8000/compile_and_get_b64', {
+         code: code,
+         language: 'cpp',
+       });
+       localStorage.setItem(name, response.data.src_as_b64);
+       // console.log(response.data.src_as_b64);
+     }
+     await getBinary(codeA, "binaryCodeA");
+     await getBinary(codeB, "binaryCodeB");
+  }
+  async RunCode()
+  {
+      const getOutput = async (binary: string, id: number) => {
+        const response = await axios.post('http://178.128.123.34:8000/run_code', {
+          code: binary,
+          stdin:"",
+        },);
+        this.output[id] = response.data.stdout;
+        //console.log(this.output[id], id, "DAYNE");
+      }
+      await getOutput(localStorage.getItem("binaryCodeA")!, 1);
+      await getOutput(localStorage.getItem("binaryCodeB")!, 2);
   }
 }
