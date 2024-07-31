@@ -6,6 +6,8 @@ import Bomb from '../../gameobjects/Bomb';
 import BombSpawn from '../../components/BombSpawn';
 import InputComponent from '../../components/InputComponent';
 import InputBomb from '../../components/InputBomb';
+import {ScoreMap} from "../../components/ScoreMap.ts";
+
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
@@ -54,10 +56,14 @@ export class Game extends Scene {
     // const { width, height } = this.scale;
     // Create platform
     const map = this.make.tilemap({ key: 'tilemap' });
+
     const grassTileset = map.addTilesetImage('Grass', 'grass-ts');
     const fencesTileset = map.addTilesetImage('Fences', 'fences-ts');
     this.grass = map.createLayer('grass', grassTileset!)!;
     this.fences = map.createLayer('fence', fencesTileset!)!;
+    const scoreMap = new ScoreMap();
+    scoreMap.create();
+    scoreMap.createMap(this);
     this.renderBorder(this.grass);
     // Create sprite
 
