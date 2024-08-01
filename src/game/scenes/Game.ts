@@ -185,10 +185,10 @@ export class Game extends Scene {
       });
       this.components.update(dt);
       this.textP1.setText(
-        `PLAYER 1\nScore:\nMove:${this.output[1]?.charAt(0) ?? ''}`
+        `PLAYER 1\nScore:${this.scoreMap.getScore(2)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
       );
       this.textP2.setText(
-        `PLAYER 2\nScore:\nMove:${this.output[2]?.charAt(0) ?? ''}`
+        `PLAYER 2\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ''}`
       );
       // console.log(this.scoreMap.getMap());
       // console.log('Score player 2', this.scoreMap.getScore(2));

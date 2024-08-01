@@ -30,7 +30,7 @@ export default class InputComponent implements IComponent {
       y: this.gameObject.y,
     };
     let key = 'idle';
-    console.log(inp);
+    // console.log(inp);
     if (inp === 'L') {
       nextPostition.x -= baseMoveDist;
       key = 'run-side';
@@ -58,7 +58,7 @@ export default class InputComponent implements IComponent {
         onUpdate: this.playAnim.bind(this, key),
         onComplete: this.playAnim.bind(this, 'idle'),
       });
-      console.log(nextPostition.x, nextPostition.y);
+      // console.log(nextPostition.x, nextPostition.y);
     } else {
       console.log(this.gameObject.x, this.gameObject.y);
     }
