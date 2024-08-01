@@ -26,7 +26,7 @@ export default class ScoreMap {
   getScoreMap() {
     return this.scores;
   }
-  getMap() {
+  getMapState() {
     return this.state;
   }
   getPointScore(x: number, y: number) {
