@@ -259,13 +259,13 @@ export class Game extends Scene {
     this.inputForB += `${(this.player2.y - 8) / 16} ` +  `${(this.player2.x - 8) / 16}\n`;
     this.inputForB += `${(this.player1.y - 8) / 16} ` +  `${(this.player1.x - 8) / 16}\n`;
     // history of movement
-    this.inputForA += this.movementA;
-    this.inputForA += '\n';
-    this.inputForA += this.movementB;
-
     this.inputForB += this.movementB;
     this.inputForB += '\n';
     this.inputForB += this.movementA;
+
+    this.inputForA += this.movementA;
+    this.inputForA += '\n';
+    this.inputForA += this.movementB;
     console.log(this.inputForA);
   }
   async CompileCode() {
