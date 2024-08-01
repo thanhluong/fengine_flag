@@ -8,7 +8,7 @@ import InputComponent from '../../components/InputComponent';
 import InputBomb from '../../components/InputBomb';
 import ScoreMap from '../../components/ScoreMap.ts';
 import axios from 'axios';
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
+// import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
@@ -25,7 +25,7 @@ const tileSz = 16;
 const codeA =
   "#include<bits/stdc++.h>\nusing namespace std;typedef pair<int,int>ii;mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());int rand(int l,int r){return l+rd()%(r-l+1);};int main(){ios_base::sync_with_stdio(0);cin.tie(0);int x=rand(1,5);if(x==1)cout<<'L';else if(x==2)cout<<'R';else if(x==3)cout<<'U';else if(x==4)cout<<'D';else cout<<'X';}";
 const codeB =
-  "#include<bits/stdc++.h>\nusing namespace std;typedef pair<int,int>ii;mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());int rand(int l,int r){return l+rd()%(r-l+1);};int main(){ios_base::sync_with_stdio(0);cin.tie(0);int x=rand(1,5);if(x==1)cout<<'U';else if(x==2)cout<<'U';else if(x==3)cout<<'U';else if(x==4)cout<<'U';else cout<<'X';}";
+  "#include<bits/stdc++.h>\nusing namespace std;typedef pair<int,int>ii;mt19937 rd(chrono::steady_clock::now().time_since_epoch().count());int rand(int l,int r){return l+rd()%(r-l+1);};int main(){ios_base::sync_with_stdio(0);cin.tie(0);int x=rand(1,5);if(x==1)cout<<'L';else if(x==2)cout<<'R';else if(x==3)cout<<'U';else if(x==4)cout<<'D';else cout<<'X';}";
 
 export class Game extends Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -43,7 +43,12 @@ export class Game extends Scene {
   inputBomb: InputBomb;
   inputBomb2: InputBomb;
   scoreMap: ScoreMap;
+  textStepHeader: Phaser.GameObjects.Text;
+  textStepContent: Phaser.GameObjects.Text;
+  step = 0;
+  textP1Header: Phaser.GameObjects.Text;
   textP1: Phaser.GameObjects.Text;
+  textP2Header: Phaser.GameObjects.Text;
   textP2: Phaser.GameObjects.Text;
   ok: boolean = true;
   output: string[] = [];
@@ -69,6 +74,10 @@ export class Game extends Scene {
       frameWidth: 48,
       frameHeight: 48,
     });
+    this.load.spritesheet('cute2', 'Character/cute2.png', {
+      frameWidth: 48,
+      frameHeight: 48,
+    });
   }
 
   create() {
@@ -88,15 +97,34 @@ export class Game extends Scene {
     this.fences = this.map.createLayer('fence', fencesTileset!)!;
     this.renderBorder(this.grass);
 
-    // console.log(map.getLayer("fench")?.data);
-
-     // Add player info text
-    this.textP1 = this.add.text(300, 20, 'PLAYER 1\nScore:\nMove:', {
+    // Add player info text
+    this.textStepHeader = this.add.text(310, 30, 'Step', {
+      color: '#000',
+      fontStyle: '900',
+      fontSize: '18px',
+    });
+    this.textStepContent = this.add.text(310, 50, '', {
+      color: '#000',
+      // fontStyle: '900',
+      fontSize: 18,
+    });
+    this.textP1Header = this.add.text(310, 80, 'PLAYER', {
+      color: '#000',
+      fontStyle: '900',
+      fontSize: 12,
+    });
+    this.add.image(340, 85, 'cute1').setOrigin(0, 0.5);
+    this.textP1 = this.add.text(310, 80, '\nScore:\nMove:', {
       color: '#000',
       fontSize: 12,
     });
-
-    this.textP2 = this.add.text(300, 80, 'PLAYER 2\nScore:\nMove:', {
+    this.textP2Header = this.add.text(310, 140, 'PLAYER', {
+      color: '#000',
+      fontStyle: '900',
+      fontSize: 12,
+    });
+    this.add.image(340, 145, 'cute2').setOrigin(0, 0.5);
+    this.textP2 = this.add.text(310, 140, '\nScore:\nMove:', {
       color: '#000',
       fontSize: 12,
     });
@@ -116,7 +144,7 @@ export class Game extends Scene {
     this.player2 = this.physics.add.sprite(
       tileSz * 16 + tileSz * 0.5,
       tileSz * 16 + tileSz * 0.5,
-      'cute1'
+      'cute2'
     );
     this.player2
       .setBodySize(this.player2.width / 3, this.player2.height / 3)
@@ -165,7 +193,7 @@ export class Game extends Scene {
       this.player2,
       new BombSpawn(this.cursors, this.bombs2)
     );
-    this.components.addComponent(this.player2, new KeyboardAnimation('cute1'));
+    this.components.addComponent(this.player2, new KeyboardAnimation('cute2'));
     this.inputBomb2 = new InputBomb(
       this.bombs2,
       this.player1,
@@ -182,26 +210,27 @@ export class Game extends Scene {
       this.ok = false;
       // this.getInputFromUser();
       this.RunCode();
-      if(this.output[1] !== undefined) {
+      if (this.output[1] !== undefined) {
         this.inputComponent.importInput(this.output[1]);
         this.inputBomb.importInput(this.output[1]);
         this.movementA += this.output[1];
       }
       // this.getInputFromUser();
-      if(this.output[2] !== undefined) {
+      if (this.output[2] !== undefined) {
         this.inputComponent2.importInput(this.output[2]);
         this.inputBomb2.importInput(this.output[2]);
         this.movementB += this.output[2];
       }
-      this.time.delayedCall(5000, () => {
+      this.time.delayedCall(1000, () => {
         this.ok = true;
       });
       this.components.update(dt);
+      this.textStepContent.setText(`${this.step++}/200`);
       this.textP1.setText(
-        `PLAYER 1\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
+        `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
       );
       this.textP2.setText(
-        `PLAYER 2\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ''}`
+        `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ''}`
       );
       this.renderBoard();
       // console.log(this.scoreMap.getMap());
@@ -225,39 +254,37 @@ export class Game extends Scene {
       }
     });
   }
-  renderBoard()
-  {
+  renderBoard() {
     // get current state
     const currentState = this.scoreMap.getMapState();
-    for(let i = 0; i < 20; i++)
-    {
+    for (let i = 0; i < 20; i++) {
       this.state[i] = [];
-      for(let j = 0; j < 20; j++)
-        this.state[i][j] = currentState[j][i];
+      for (let j = 0; j < 20; j++) this.state[i][j] = currentState[j][i];
     }
     this.map.getLayer('fence')?.data.forEach((row, i) => {
-        row.forEach((tile, j) => {
-        if(tile.index !== -1)
-          this.state[i][j] = -1;
-        });
+      row.forEach((tile, j) => {
+        if (tile.index !== -1) this.state[i][j] = -1;
+      });
     });
     this.inputForA = this.inputForB = '';
-    for(let i = 1; i <= 16; i++)
-    {
-      for(let j = 1; j <= 16; j++)
-      {
-          this.inputForA += this.state[i][j].toString();
-          this.inputForA += " ";
+    for (let i = 1; i <= 16; i++) {
+      for (let j = 1; j <= 16; j++) {
+        this.inputForA += this.state[i][j].toString();
+        this.inputForA += ' ';
       }
       this.inputForA += '\n';
     }
     // get position of player 1 and player 2
     this.inputForB = this.inputForA;
-    this.inputForA +=`${(this.player1.y - 8) / 16} ` +  `${(this.player1.x - 8) / 16}\n`;
-    this.inputForA +=`${(this.player2.y - 8) / 16} ` +  `${(this.player2.x - 8) / 16}\n`;
+    this.inputForA +=
+      `${(this.player1.y - 8) / 16} ` + `${(this.player1.x - 8) / 16}\n`;
+    this.inputForA +=
+      `${(this.player2.y - 8) / 16} ` + `${(this.player2.x - 8) / 16}\n`;
 
-    this.inputForB += `${(this.player2.y - 8) / 16} ` +  `${(this.player2.x - 8) / 16}\n`;
-    this.inputForB += `${(this.player1.y - 8) / 16} ` +  `${(this.player1.x - 8) / 16}\n`;
+    this.inputForB +=
+      `${(this.player2.y - 8) / 16} ` + `${(this.player2.x - 8) / 16}\n`;
+    this.inputForB +=
+      `${(this.player1.y - 8) / 16} ` + `${(this.player1.x - 8) / 16}\n`;
     // history of movement
     this.inputForB += this.movementB;
     this.inputForB += '\n';
