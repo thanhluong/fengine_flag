@@ -60,7 +60,7 @@ export default class InputComponent implements IComponent {
       });
       // console.log(nextPostition.x, nextPostition.y);
     } else {
-      console.log(this.gameObject.x, this.gameObject.y);
+      // console.log(this.gameObject.x, this.gameObject.y);
     }
   }
   playAnim(key: string) {

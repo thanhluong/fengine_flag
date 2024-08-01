@@ -1,13 +1,13 @@
 import { IComponent } from '../service/ComponentService';
-import { WASDKeys } from '../game/scenes/Game';
+// import { WASDKeys } from '../game/scenes/Game';
 
 export default class KeyboardAnimation implements IComponent {
   private gameObject: Phaser.Physics.Arcade.Sprite;
-  private cursors: WASDKeys;
+  // private cursors: WASDKeys;
   private key: string;
 
-  constructor(cursors: WASDKeys, key: string) {
-    this.cursors = cursors;
+  constructor(key: string) {
+    // this.cursors = cursors;
     this.key = key;
   }
 
@@ -22,19 +22,19 @@ export default class KeyboardAnimation implements IComponent {
   start() {}
 
   update() {
-    if (this.cursors.left.isDown) {
-      this.gameObject.play('run-side', true);
-      this.gameObject.setFlipX(true);
-    } else if (this.cursors.right.isDown) {
-      this.gameObject.play('run-side', true);
-      this.gameObject.setFlipX(false);
-    } else if (this.cursors.up.isDown) {
-      this.gameObject.play('run-up', true);
-    } else if (this.cursors.down.isDown) {
-      this.gameObject.play('run-down', true);
-    } else {
-      // this.gameObject.play('idle');
-    }
+    // if (this.cursors.left.isDown) {
+    //   this.gameObject.play('run-side', true);
+    //   this.gameObject.setFlipX(true);
+    // } else if (this.cursors.right.isDown) {
+    //   this.gameObject.play('run-side', true);
+    //   this.gameObject.setFlipX(false);
+    // } else if (this.cursors.up.isDown) {
+    //   this.gameObject.play('run-up', true);
+    // } else if (this.cursors.down.isDown) {
+    //   this.gameObject.play('run-down', true);
+    // } else {
+    //   // this.gameObject.play('idle');
+    // }
   }
 
   createAnims() {

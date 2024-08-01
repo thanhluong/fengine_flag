@@ -124,14 +124,11 @@ export class Game extends Scene {
       this.player1,
       new KeyboardMovement(this.cursors)
     );
-    this.components.addComponent(
-      this.player1,
-      new BombSpawn(this.cursors, this.bombs)
-    );
-    this.components.addComponent(
-      this.player1,
-      new KeyboardAnimation(this.cursors, 'cute1')
-    );
+    // this.components.addComponent(
+    //   this.player1,
+    //   new BombSpawn(this.cursors, this.bombs)
+    // );
+    this.components.addComponent(this.player1, new KeyboardAnimation('cute1'));
     this.inputBomb = new InputBomb(
       this.bombs,
       this.player2,
@@ -155,10 +152,7 @@ export class Game extends Scene {
       this.player2,
       new BombSpawn(this.cursors, this.bombs2)
     );
-    this.components.addComponent(
-      this.player2,
-      new KeyboardAnimation(this.cursors, 'cute1')
-    );
+    this.components.addComponent(this.player2, new KeyboardAnimation('cute1'));
     this.inputBomb2 = new InputBomb(
       this.bombs2,
       this.player1,
@@ -185,7 +179,7 @@ export class Game extends Scene {
       });
       this.components.update(dt);
       this.textP1.setText(
-        `PLAYER 1\nScore:${this.scoreMap.getScore(2)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
+        `PLAYER 1\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
       );
       this.textP2.setText(
         `PLAYER 2\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ''}`
