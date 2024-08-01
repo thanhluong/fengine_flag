@@ -41,7 +41,7 @@ export default class ScoreMap {
         this.numberSet.add(this.scores[i][j]);
       }
     }
-    let step = 150 / this.numberSet.size;
+    let step = 200 / this.numberSet.size;
 
     for (let i = 1; i <= 16; i++) {
       for (let j = 1; j <= 16; j++) {
@@ -60,7 +60,7 @@ export default class ScoreMap {
             j * 16,
             16,
             16,
-            Phaser.Display.Color.GetColor(255, 80 + count * step, 0)
+            Phaser.Display.Color.GetColor(255, 200 - count * step, 0)
           )
           .setOrigin(0, 0);
       }

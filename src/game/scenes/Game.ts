@@ -71,13 +71,15 @@ export class Game extends Scene {
     const grassTileset = map.addTilesetImage('Grass', 'grass-ts');
     const fencesTileset = map.addTilesetImage('Fences', 'fences-ts');
     this.grass = map.createLayer('grass', grassTileset!)!;
-    this.fences = map.createLayer('fence', fencesTileset!)!;
     this.scoreMap = new ScoreMap();
     this.scoreMap.create();
     this.scoreMap.createMap(this);
+    this.fences = map.createLayer('fence', fencesTileset!)!;
     this.renderBorder(this.grass);
 
-    // Add player info text
+    // console.log(map.getLayer("fench")?.data);
+
+     // Add player info text
     this.textP1 = this.add.text(300, 20, 'PLAYER 1\nScore:\nMove:', {
       color: '#000',
       fontSize: 12,
@@ -194,7 +196,7 @@ export class Game extends Scene {
   }
   renderBorder(layer: Phaser.Tilemaps.TilemapLayer) {
     const debugGraphics = this.add.graphics().setAlpha(0.5);
-    debugGraphics.lineStyle(2, 0xff0000, 0.25);
+    debugGraphics.lineStyle(2, 0xffffff, 0.25);
     layer.forEachTile(tile => {
       if (tile.index !== -1) {
         const x = tile.getLeft();
@@ -224,7 +226,6 @@ export class Game extends Scene {
         stdin: '',
       });
       this.output[id] = response.data.stdout;
-      //console.log(this.output[id], id, "DAYNE");
     };
     await getOutput(localStorage.getItem('binaryCodeA')!, 1);
     await getOutput(localStorage.getItem('binaryCodeB')!, 2);
