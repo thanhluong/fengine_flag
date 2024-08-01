@@ -29,7 +29,7 @@ export default class InputComponent implements IComponent {
       x: this.gameObject.x,
       y: this.gameObject.y,
     };
-    let key!: string;
+    let key = 'idle';
     console.log(inp);
     if (inp === 'L') {
       nextPostition.x -= baseMoveDist;
@@ -49,7 +49,7 @@ export default class InputComponent implements IComponent {
       key = 'idle';
     }
     const tile = this.fences.getTileAtWorldXY(nextPostition.x, nextPostition.y);
-    if (tile === null) {
+    if (tile == null) {
       scene.tweens.add({
         targets: this.gameObject,
         x: nextPostition.x,
@@ -58,6 +58,9 @@ export default class InputComponent implements IComponent {
         onUpdate: this.playAnim.bind(this, key),
         onComplete: this.playAnim.bind(this, 'idle'),
       });
+      console.log(nextPostition.x, nextPostition.y);
+    } else {
+      console.log(this.gameObject.x, this.gameObject.y);
     }
   }
   playAnim(key: string) {

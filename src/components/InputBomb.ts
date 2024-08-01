@@ -2,6 +2,7 @@ import Phaser, { Physics, Scene } from 'phaser';
 import { IComponent } from '../service/ComponentService';
 import StateMachine from '../statemachine/StateMachine';
 import Bomb from '../gameobjects/Bomb';
+import ScoreMap from './ScoreMap';
 
 export default class InputBomb implements IComponent {
   private userInput: string = '';
@@ -9,16 +10,19 @@ export default class InputBomb implements IComponent {
   private enemy: Phaser.Physics.Arcade.Sprite;
   private stateMachine: StateMachine;
   private scene: Scene;
+  private scoreMap: ScoreMap;
   key: string;
   bombs: Physics.Arcade.StaticGroup;
   constructor(
     bombs: Physics.Arcade.StaticGroup,
     enemy: Phaser.Physics.Arcade.Sprite,
-    key: string
+    key: string,
+    scroreMap: ScoreMap
   ) {
     this.bombs = bombs;
     this.enemy = enemy;
     this.key = key;
+    this.scoreMap = scroreMap;
     this.stateMachine = new StateMachine(this, 'bomb_spawn');
   }
   init(go: Phaser.GameObjects.GameObject) {
@@ -50,6 +54,11 @@ export default class InputBomb implements IComponent {
       !this.checkBombAt(this.gameObject.x, this.gameObject.y)
     ) {
       const enemyBomb = this.getEnemyBomb(this.gameObject.x, this.gameObject.y);
+      if (this.key === 'bomb') {
+        this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 1);
+      } else if (this.key === 'flag-blue') {
+        this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 2);
+      }
       if (enemyBomb) console.log('Overlap');
       enemyBomb?.destroy();
 
