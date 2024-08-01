@@ -208,6 +208,22 @@ export class Game extends Scene {
   update(_: number, dt: number): void {
     if (this.ok) {
       this.ok = false;
+      if (this.step > 30) {
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.cameras.main.once('camerafadeoutcomplete', () => {
+          const scorePlayer1 = this.scoreMap.getScore(1);
+          const scorePlayer2 = this.scoreMap.getScore(2);
+          let result = 'draw';
+          if (scorePlayer1 > scorePlayer2) {
+            result = 'Player 1';
+          } else if (scorePlayer1 < scorePlayer2) {
+            result = 'Player 2';
+          }
+          this.scene.start('GameOver', { result });
+          this.scene.stop();
+        });
+        return;
+      }
       // this.getInputFromUser();
       this.RunCode();
       if (this.output[1] !== undefined) {
@@ -221,11 +237,12 @@ export class Game extends Scene {
         this.inputBomb2.importInput(this.output[2]);
         this.movementB += this.output[2];
       }
+
       this.time.delayedCall(1000, () => {
         this.ok = true;
       });
       this.components.update(dt);
-      this.textStepContent.setText(`${this.step++}/200`);
+      this.textStepContent.setText(`${this.step++}/30`);
       this.textP1.setText(
         `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ''}`
       );

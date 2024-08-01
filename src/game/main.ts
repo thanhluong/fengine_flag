@@ -1,4 +1,5 @@
 import { Game as MainGame } from './scenes/Game';
+import { GameOver } from './scenes/GameOver';
 import { AUTO, Game, Types, Scale } from 'phaser';
 
 //  Find out more information about the Game Config at:
@@ -20,7 +21,7 @@ const config: Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [MainGame],
+  scene: [MainGame, GameOver],
 };
 
 const StartGame = (parent: any) => {
