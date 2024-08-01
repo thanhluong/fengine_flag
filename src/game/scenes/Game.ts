@@ -51,6 +51,7 @@ export class Game extends Scene {
   textP2Header: Phaser.GameObjects.Text;
   textP2: Phaser.GameObjects.Text;
   ok: boolean = true;
+  isPause: boolean = false;
   output: string[] = [];
   map: Phaser.Tilemaps.Tilemap;
   state: number[][];
@@ -206,7 +207,7 @@ export class Game extends Scene {
     // EventBus.emit('current-scene-ready', this);
   }
   update(_: number, dt: number): void {
-    if (this.ok) {
+    if (this.ok && !this.isPause) {
       this.ok = false;
       if (this.step > 30) {
         this.cameras.main.fadeOut(1000, 0, 0, 0);
@@ -250,8 +251,10 @@ export class Game extends Scene {
         `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ''}`
       );
       this.renderBoard();
-      // console.log(this.scoreMap.getMap());
-      // console.log('Score player 2', this.scoreMap.getScore(2));
+    }
+    const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
+    if (spaceJustPressed) {
+      this.isPause = !this.isPause;
     }
   }
   getInputFromUser() {
