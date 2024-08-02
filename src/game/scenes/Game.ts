@@ -222,14 +222,14 @@ export class Game extends Scene {
       }
       this.RunCode();
       if (this.output[1] !== undefined) {
-        this.inputComponent.importInput(this.output[1]);
-        this.inputBomb.importInput(this.output[1]);
-        this.movementA += this.output[1];
+        this.inputComponent.importInput(this.output[1][0]);
+        this.inputBomb.importInput(this.output[1][0]);
+        this.movementA += this.output[1][0];
       }
       if (this.output[2] !== undefined) {
-        this.inputComponent2.importInput(this.output[2]);
-        this.inputBomb2.importInput(this.output[2]);
-        this.movementB += this.output[2];
+        this.inputComponent2.importInput(this.output[2][0]);
+        this.inputBomb2.importInput(this.output[2][0]);
+        this.movementB += this.output[2][0];
       }
 
       this.time.delayedCall(1000, () => {
