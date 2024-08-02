@@ -10,11 +10,22 @@ function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [cppCode, setCppCode] = useState<string>(defaultCppCode);
+  const [Player, changePlayer] = useState<string>("Player 1");
+
+  const onChangePlayer = () => {
+    if (Player === "Player 1") changePlayer("Player 2");
+    else changePlayer("Player 1");
+  };
 
   const onCodeChange = useCallback((val: string, _: any) => {
     setCppCode(val);
   }, []);
 
+  const submitCode = () => {
+    if (Player === "Player 1") {
+      localStorage.setItem("codeA", cppCode);
+    } else localStorage.setItem("codeB", cppCode);
+  };
   // const addSprite = () => {
   //   if (phaserRef.current) {
   //     const scene = phaserRef.current.scene;
@@ -32,6 +43,7 @@ function App() {
 
   return (
     <div id="app">
+      <button onClick={onChangePlayer}>{Player}</button>
       <div>
         <CodeMirror
           theme={tokyoNight}
@@ -42,6 +54,8 @@ function App() {
           onChange={onCodeChange}
         />
       </div>
+      <button onClick={submitCode}>submit</button>
+
       <PhaserGame ref={phaserRef} />
       {/* <div>
         <div>
