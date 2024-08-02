@@ -3,7 +3,6 @@ import ComponentService from '../../service/ComponentService';
 import KeyboardMovement from '../../components/KeyboardMovement';
 import KeyboardAnimation from '../../components/KeyboardAnimation';
 import Bomb from '../../gameobjects/Bomb';
-import BombSpawn from '../../components/BombSpawn';
 import InputComponent from '../../components/InputComponent';
 import InputBomb from '../../components/InputBomb';
 import ScoreMap from '../../components/ScoreMap.ts';
@@ -51,7 +50,7 @@ export class Game extends Scene {
   textP2Header: Phaser.GameObjects.Text;
   textP2: Phaser.GameObjects.Text;
   ok: boolean = true;
-  isPause: boolean = false;
+  isPause: boolean = true;
   output: string[] = [];
   map: Phaser.Tilemaps.Tilemap;
   state: number[][];
@@ -166,10 +165,6 @@ export class Game extends Scene {
       this.player1,
       new KeyboardMovement(this.cursors)
     );
-    // this.components.addComponent(
-    //   this.player1,
-    //   new BombSpawn(this.cursors, this.bombs)
-    // );
     this.components.addComponent(this.player1, new KeyboardAnimation('cute1'));
     this.inputBomb = new InputBomb(
       this.bombs,
@@ -190,10 +185,6 @@ export class Game extends Scene {
       this.player2,
       new KeyboardMovement(this.cursors)
     );
-    this.components.addComponent(
-      this.player2,
-      new BombSpawn(this.cursors, this.bombs2)
-    );
     this.components.addComponent(this.player2, new KeyboardAnimation('cute2'));
     this.inputBomb2 = new InputBomb(
       this.bombs2,
@@ -204,7 +195,6 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
-    // EventBus.emit('current-scene-ready', this);
   }
   update(_: number, dt: number): void {
     if (this.ok && !this.isPause) {
@@ -225,14 +215,12 @@ export class Game extends Scene {
         });
         return;
       }
-      // this.getInputFromUser();
       this.RunCode();
       if (this.output[1] !== undefined) {
         this.inputComponent.importInput(this.output[1]);
         this.inputBomb.importInput(this.output[1]);
         this.movementA += this.output[1];
       }
-      // this.getInputFromUser();
       if (this.output[2] !== undefined) {
         this.inputComponent2.importInput(this.output[2]);
         this.inputBomb2.importInput(this.output[2]);
@@ -259,7 +247,6 @@ export class Game extends Scene {
   }
   getInputFromUser() {
     this.userInput = arr[Math.floor(5 * Math.random())];
-    // this.userInput = 'X';
   }
   renderBorder(layer: Phaser.Tilemaps.TilemapLayer) {
     const debugGraphics = this.add.graphics().setAlpha(0.5);
