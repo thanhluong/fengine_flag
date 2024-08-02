@@ -1,8 +1,12 @@
 import { useRef, useState, useCallback } from "react";
 import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
+
 import CodeMirror from "@uiw/react-codemirror";
 import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
 import { cpp } from "@codemirror/lang-cpp";
+
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const defaultCppCode = `#include <iostream>`;
 
@@ -43,18 +47,30 @@ function App() {
 
   return (
     <div id="app">
-      <button onClick={onChangePlayer}>{Player}</button>
       <div>
-        <CodeMirror
-          theme={tokyoNight}
-          value={cppCode}
-          height="400px"
-          width="350px"
-          extensions={[cpp()]}
-          onChange={onCodeChange}
-        />
+        <Stack direction="column" spacing={2}>
+          <Stack direction="row" spacing={2}>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={onChangePlayer}
+            >
+              {Player}
+            </Button>
+            <Button variant="contained" onClick={submitCode}>
+              submit
+            </Button>
+          </Stack>
+          <CodeMirror
+            theme={tokyoNight}
+            value={cppCode}
+            height="400px"
+            width="350px"
+            extensions={[cpp()]}
+            onChange={onCodeChange}
+          />
+        </Stack>
       </div>
-      <button onClick={submitCode}>submit</button>
 
       <PhaserGame ref={phaserRef} />
       {/* <div>
