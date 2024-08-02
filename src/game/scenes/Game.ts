@@ -49,6 +49,7 @@ export class Game extends Scene {
   textP1: Phaser.GameObjects.Text;
   textP2Header: Phaser.GameObjects.Text;
   textP2: Phaser.GameObjects.Text;
+  textNoti: Phaser.GameObjects.Text;
   ok: boolean = true;
   isPause: boolean = true;
   output: string[] = [];
@@ -108,13 +109,14 @@ export class Game extends Scene {
       // fontStyle: '900',
       fontSize: 18,
     });
+    this.textStepContent.setText(`${this.step}/30`);
     this.textP1Header = this.add.text(310, 80, 'PLAYER', {
       color: '#000',
       fontStyle: '900',
       fontSize: 12,
     });
     this.add.image(340, 85, 'cute1').setOrigin(0, 0.5);
-    this.textP1 = this.add.text(310, 80, '\nScore:\nMove:', {
+    this.textP1 = this.add.text(310, 80, '\nScore:0\nMove:', {
       color: '#000',
       fontSize: 12,
     });
@@ -124,9 +126,14 @@ export class Game extends Scene {
       fontSize: 12,
     });
     this.add.image(340, 145, 'cute2').setOrigin(0, 0.5);
-    this.textP2 = this.add.text(310, 140, '\nScore:\nMove:', {
+    this.textP2 = this.add.text(310, 140, '\nScore:0\nMove:', {
       color: '#000',
       fontSize: 12,
+    });
+    this.textNoti = this.add.text(300, 240, 'Press SPACE\nto start', {
+      color: '#000',
+      fontSize: 12,
+      align: 'center',
     });
     // Create sprite
     // PLAYER 1
@@ -198,6 +205,7 @@ export class Game extends Scene {
   }
   update(_: number, dt: number): void {
     if (this.ok && !this.isPause) {
+      this.textNoti.setText('Press SPACE\nto stop');
       this.ok = false;
       if (this.step > 30) {
         this.cameras.main.fadeOut(1000, 0, 0, 0);
@@ -243,6 +251,7 @@ export class Game extends Scene {
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
     if (spaceJustPressed) {
       this.isPause = !this.isPause;
+      this.textNoti.setText('Press SPACE\nto start');
     }
   }
   getInputFromUser() {
