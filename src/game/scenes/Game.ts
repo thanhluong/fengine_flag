@@ -318,7 +318,13 @@ export class Game extends Scene {
         code: code,
         language: "cpp",
       });
-      localStorage.setItem(name, response.data.src_as_b64);
+      console.log(response.data.error, "rere");
+
+      if (response.data.error !== "no") {
+        if (name === "binaryCodeA") {
+          alert("Error in Player1 Code");
+        } else alert("Error in Player2 Code");
+      } else localStorage.setItem(name, response.data.src_as_b64);
       // console.log(response.data.src_as_b64);
     };
     if (
