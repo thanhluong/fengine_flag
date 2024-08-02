@@ -25,6 +25,9 @@
     "build": "vite build --config vite/config.prod.mjs"
   },
   "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@uiw/codemirror-theme-tokyo-night": "^4.23.0",
+    "@uiw/react-codemirror": "^4.23.0",
     "axios": "^1.7.2",
     "phaser": "^3.80.1",
     "react": "^18.2.0",

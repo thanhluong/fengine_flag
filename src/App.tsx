@@ -1,9 +1,19 @@
-import { useRef } from 'react';
-import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
+import { useRef, useState, useCallback } from "react";
+import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
+import CodeMirror from "@uiw/react-codemirror";
+import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
+import { cpp } from "@codemirror/lang-cpp";
+
+const defaultCppCode = `#include <iostream>`;
 
 function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
+  const [cppCode, setCppCode] = useState<string>(defaultCppCode);
+
+  const onCodeChange = useCallback((val: string, _: any) => {
+    setCppCode(val);
+  }, []);
 
   // const addSprite = () => {
   //   if (phaserRef.current) {
@@ -22,6 +32,16 @@ function App() {
 
   return (
     <div id="app">
+      <div>
+        <CodeMirror
+          theme={tokyoNight}
+          value={cppCode}
+          height="400px"
+          width="350px"
+          extensions={[cpp()]}
+          onChange={onCodeChange}
+        />
+      </div>
       <PhaserGame ref={phaserRef} />
       {/* <div>
         <div>
