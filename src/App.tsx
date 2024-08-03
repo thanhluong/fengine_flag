@@ -15,10 +15,6 @@ function App() {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [cppCode, setCppCode] = useState<string>(defaultCppCode);
   const [Player, changePlayer] = useState<string>("Player 1");
-  localStorage.setItem("codeA", "");
-  localStorage.setItem("codeB", "");
-  localStorage.setItem("binaryCodeA", "");
-  localStorage.setItem("binaryCodeB", "");
 
   const onChangePlayer = () => {
     if (Player === "Player 1") {

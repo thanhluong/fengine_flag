@@ -81,6 +81,12 @@ export class Game extends Scene {
   create() {
     // const { width, height } = this.scale;
     // Create platform
+
+    localStorage.setItem("codeA", "");
+    localStorage.setItem("codeB", "");
+    localStorage.setItem("binaryCodeA", "");
+    localStorage.setItem("binaryCodeB", "");
+
     this.state = [];
     this.movementB = "";
     this.movementA = "";
@@ -333,7 +339,6 @@ export class Game extends Scene {
       codeA !== localStorage.getItem("codeA")
     ) {
       codeA = localStorage.getItem("codeA")!;
-      console.log("TRITRI1");
       await getBinary(codeA, "binaryCodeA");
     }
 
