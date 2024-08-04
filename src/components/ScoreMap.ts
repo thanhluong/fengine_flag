@@ -8,6 +8,7 @@ export default class ScoreMap {
   blockSize: 16;
   startPoint: [number, number] = [4, 4];
   endPoint: [number, number] = [13, 13];
+  numberQuantity = 6;
 
   constructor() {
     this.scores = [];
@@ -26,7 +27,8 @@ export default class ScoreMap {
   create() {
     for (let i = 0; i < 20; i++) {
       for (let j = 0; j < 20; j++) {
-        this.scores[i][j] = Phaser.Math.Between(0, 100);
+        this.scores[i][j] = Phaser.Math.Between(0, this.numberQuantity);
+        this.scores[i][j] = Math.pow(2, this.scores[i][j]);
       }
     }
   }
@@ -52,18 +54,19 @@ export default class ScoreMap {
         this.numberSet.add(this.scores[i][j]);
       }
     }
-    let step = 200 / this.numberSet.size;
+
+    let step = 200 / this.numberQuantity;
 
     for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
       for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         let count = -1;
 
-        for (let k of this.numberSet) {
-          if (this.scores[i][j] == k) {
-            break;
-          }
+        let curretValue = this.scores[i][j];
+        while (curretValue > 0) {
+          curretValue /= 2;
           count++;
         }
+
         scene.add
           .rectangle(
             i * 16,
