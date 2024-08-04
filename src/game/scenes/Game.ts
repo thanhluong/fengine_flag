@@ -280,6 +280,8 @@ export class Game extends Scene {
   renderBoard() {
     // get current state
     const currentState = this.scoreMap.getMapState();
+    const scoreMap = this.scoreMap.getScoreMap();
+
     for (let i = 0; i < 20; i++) {
       this.state[i] = [];
       for (let j = 0; j < 20; j++) this.state[i][j] = currentState[j][i];
@@ -290,8 +292,24 @@ export class Game extends Scene {
       });
     });
     this.inputForA = this.inputForB = "";
-    for (let i = 1; i <= 16; i++) {
-      for (let j = 1; j <= 16; j++) {
+    let startPoint = this.scoreMap.getStartPoint();
+    let endPoint = this.scoreMap.getEndPoint();
+    // get point
+
+    for (let i = startPoint[0]; i <= endPoint[0]; i++) {
+      for (let j = startPoint[1]; j <= endPoint[1]; j++) {
+        if (this.state[i][j] === -1) {
+          this.inputForA += "0 ";
+        } else {
+          this.inputForA += scoreMap[i][j].toString();
+          this.inputForA += " ";
+        }
+      }
+      this.inputForA += "\n";
+    }
+    //
+    for (let i = startPoint[0]; i <= endPoint[0]; i++) {
+      for (let j = startPoint[1]; j <= endPoint[1]; j++) {
         this.inputForA += this.state[i][j].toString();
         this.inputForA += " ";
       }

@@ -1,11 +1,18 @@
+import { Pair } from "matter";
+
 export default class ScoreMap {
   scores: number[][];
   state: number[][];
   numberSet: Set<number> = new Set<number>();
 
+  blockSize: 16;
+  startPoint: [number, number] = [4, 4];
+  endPoint: [number, number] = [13, 13];
+
   constructor() {
     this.scores = [];
     this.state = [];
+
     for (let i = 0; i < 20; i++) {
       this.scores[i] = [];
       this.state[i] = [];
@@ -30,21 +37,25 @@ export default class ScoreMap {
     return this.state;
   }
   getPointScore(x: number, y: number) {
-    return this.scores[(x - 8) / 16][(y - 8) / 16];
+    return this.scores[(x - this.blockSize / 2) / this.blockSize][
+      (y - this.blockSize / 2) / this.blockSize
+    ];
   }
   getPointState(x: number, y: number) {
-    return this.state[(x - 8) / 16][(y - 8) / 16];
+    return this.state[(x - this.blockSize / 2) / this.blockSize][
+      (y - this.blockSize / 2) / this.blockSize
+    ];
   }
   createMap(scene: Phaser.Scene) {
-    for (let i = 1; i <= 16; i++) {
-      for (let j = 1; j <= 16; j++) {
+    for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
+      for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         this.numberSet.add(this.scores[i][j]);
       }
     }
     let step = 200 / this.numberSet.size;
 
-    for (let i = 1; i <= 16; i++) {
-      for (let j = 1; j <= 16; j++) {
+    for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
+      for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         let count = -1;
 
         for (let k of this.numberSet) {
@@ -53,7 +64,6 @@ export default class ScoreMap {
           }
           count++;
         }
-        //  console.log(count, this.scores[i][j]);
         scene.add
           .rectangle(
             i * 16,
@@ -67,15 +77,26 @@ export default class ScoreMap {
     }
   }
   setState(x: number, y: number, state: number) {
-    this.state[(x - 8) / 16][(y - 8) / 16] = state;
+    this.state[(x - this.blockSize / 2) / this.blockSize][
+      (y - this.blockSize / 2) / this.blockSize
+    ] = state;
   }
   getScore(type: number) {
     let score = 0;
-    for (let i = 1; i <= 16; i++) {
-      for (let j = 1; j <= 16; j++) {
+    for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
+      for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         if (this.state[i][j] == type) score += this.scores[i][j];
       }
     }
     return score;
+  }
+  getEndPoint() {
+    return this.endPoint;
+  }
+  getStartPoint() {
+    return this.startPoint;
+  }
+  getBlockSize() {
+    return this.blockSize;
   }
 }
