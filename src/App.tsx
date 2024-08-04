@@ -1,12 +1,12 @@
-import { useRef, useState, useCallback } from 'react';
-import { IRefPhaserGame, PhaserGame } from './game/PhaserGame';
+import { useRef, useState, useCallback } from "react";
+import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
 
-import CodeMirror from '@uiw/react-codemirror';
-import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
-import { cpp } from '@codemirror/lang-cpp';
+import CodeMirror from "@uiw/react-codemirror";
+import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
+import { cpp } from "@codemirror/lang-cpp";
 
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const defaultCppCode = `#include <iostream>`;
 
@@ -14,19 +14,15 @@ function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [cppCode, setCppCode] = useState<string>(defaultCppCode);
-  const [player, changePlayer] = useState<string>('Player 1');
-  localStorage.setItem('codeA', '');
-  localStorage.setItem('codeB', '');
-  localStorage.setItem('binaryCodeA', '');
-  localStorage.setItem('binaryCodeB', '');
+  const [Player, changePlayer] = useState<string>("Player 1");
 
   const onChangePlayer = () => {
-    if (player === 'Player 1') {
-      changePlayer('Player 2');
-      setCppCode(localStorage.getItem('codeB')!);
+    if (Player === "Player 1") {
+      changePlayer("Player 2");
+      setCppCode(localStorage.getItem("codeB")!);
     } else {
-      changePlayer('Player 1');
-      setCppCode(localStorage.getItem('codeA')!);
+      changePlayer("Player 1");
+      setCppCode(localStorage.getItem("codeA")!);
     }
   };
 
@@ -35,10 +31,24 @@ function App() {
   }, []);
 
   const submitCode = () => {
-    if (player === 'Player 1') {
-      localStorage.setItem('codeA', cppCode);
-    } else localStorage.setItem('codeB', cppCode);
+    if (Player === "Player 1") {
+      localStorage.setItem("codeA", cppCode);
+    } else localStorage.setItem("codeB", cppCode);
   };
+  // const addSprite = () => {
+  //   if (phaserRef.current) {
+  //     const scene = phaserRef.current.scene;
+
+  //     if (scene) {
+  //       // Add a new sprite to the current scene at a random position
+  //       const x = Phaser.Math.Between(64, scene.scale.width - 64);
+  //       const y = Phaser.Math.Between(64, scene.scale.height - 64);
+
+  //       //  `add.sprite` is a Phaser GameObjectFactory method and it returns a Sprite Game Object instance
+  //       // const star = scene.add.sprite(x, y, 'star');
+  //     }
+  //   }
+  // };
 
   return (
     <div id="app">
@@ -50,7 +60,7 @@ function App() {
               variant="contained"
               onClick={onChangePlayer}
             >
-              {player}
+              {Player}
             </Button>
             <Button variant="contained" onClick={submitCode}>
               submit
