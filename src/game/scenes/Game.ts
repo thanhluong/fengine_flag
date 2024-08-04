@@ -139,9 +139,12 @@ export class Game extends Scene {
     });
     // Create sprite
     // PLAYER 1
+    let endPoint = this.scoreMap.getEndPoint();
+    let startPoint = this.scoreMap.getStartPoint();
+
     this.player1 = this.physics.add.sprite(
-      tileSz * 1 + tileSz * 0.5,
-      tileSz * 16 + tileSz * 0.5,
+      tileSz * startPoint[0] + tileSz * 0.5,
+      tileSz * endPoint[1] + tileSz * 0.5,
       "cute1"
     );
     this.player1
@@ -151,8 +154,8 @@ export class Game extends Scene {
     this.bombs = this.physics.add.staticGroup({ classType: Bomb });
     // PLAYER 2
     this.player2 = this.physics.add.sprite(
-      tileSz * 16 + tileSz * 0.5,
-      tileSz * 16 + tileSz * 0.5,
+      tileSz * endPoint[1] + tileSz * 0.5,
+      tileSz * endPoint[1] + tileSz * 0.5,
       "cute2"
     );
     this.player2
