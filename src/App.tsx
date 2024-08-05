@@ -7,14 +7,25 @@ import { cpp } from "@codemirror/lang-cpp";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const defaultCppCode = `#include <iostream>`;
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [cppCode, setCppCode] = useState<string>(defaultCppCode);
   const [Player, changePlayer] = useState<string>("Player 1");
+  const [isPlayer1Ready, setPlayer1Ready] = useState<boolean>(false);
+  const [isPlayer2Ready, setPlayer2Ready] = useState<boolean>(false);
 
   const onChangePlayer = () => {
     if (Player === "Player 1") {
@@ -51,41 +62,54 @@ function App() {
   // };
 
   return (
-    <div id="app">
-      <div>
-        <Stack direction="column" spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={onChangePlayer}
-            >
-              {Player}
-            </Button>
-            <Button variant="contained" onClick={submitCode}>
-              submit
-            </Button>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div id="app">
+        <div>
+          <Stack direction="column" spacing={2}>
+            <Stack direction="row" spacing={2}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={onChangePlayer}
+              >
+                {Player}
+              </Button>
+              <Button variant="contained" onClick={submitCode}>
+                submit
+              </Button>
+            </Stack>
+            <CodeMirror
+              theme={tokyoNight}
+              value={cppCode}
+              height="400px"
+              width="350px"
+              extensions={[cpp()]}
+              onChange={onCodeChange}
+            />
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox color="success" checked={isPlayer1Ready} />}
+                label={"Player 1 ready"}
+              />
+              <FormControlLabel
+                control={<Checkbox color="success" checked={isPlayer2Ready} />}
+                label={"Player 2 ready"}
+              />
+            </FormGroup>
           </Stack>
-          <CodeMirror
-            theme={tokyoNight}
-            value={cppCode}
-            height="400px"
-            width="350px"
-            extensions={[cpp()]}
-            onChange={onCodeChange}
-          />
-        </Stack>
-      </div>
+        </div>
 
-      <PhaserGame ref={phaserRef} />
-      {/* <div>
+        <PhaserGame ref={phaserRef} />
+        {/* <div>
         <div>
           <button className="button" onClick={addSprite}>
             Add New Sprite
           </button>
         </div>
       </div> */}
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
 
