@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState } from "react";
 import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
 
 import CodeMirror from "@uiw/react-codemirror";
@@ -24,26 +24,26 @@ function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
   const [cppCode, setCppCode] = useState<string>(defaultCppCode);
-  const [Player, changePlayer] = useState<string>("Player 1");
+  const [player, setPlayer] = useState<string>("Player 1");
   const [isPlayer1Ready, setPlayer1Ready] = useState<boolean>(false);
   const [isPlayer2Ready, setPlayer2Ready] = useState<boolean>(false);
 
   const onChangePlayer = () => {
-    if (Player === "Player 1") {
-      changePlayer("Player 2");
+    if (player === "Player 1") {
+      setPlayer("Player 2");
       setCppCode(localStorage.getItem("codeB")!);
     } else {
-      changePlayer("Player 1");
+      setPlayer("Player 1");
       setCppCode(localStorage.getItem("codeA")!);
     }
   };
 
-  const onCodeChange = useCallback((val: string, _: any) => {
+  const onCodeChange = (val: string) => {
     setCppCode(val);
-    if (Player === "Player 1") {
+    if (player === "Player 1") {
       setPlayer1Ready(false);
     } else setPlayer2Ready(false);
-  }, []);
+  };
 
   const getBinaryCode = async (code: string, id: number) => {
     const response = await axios.post(`${EXECUTOR_URL}/compile_and_get_b64`, {
@@ -65,7 +65,7 @@ function App() {
   };
 
   const submitCode = () => {
-    if (Player === "Player 1") {
+    if (player === "Player 1") {
       localStorage.setItem("codeA", cppCode);
       getBinaryCode(cppCode, 1);
     } else {
@@ -100,7 +100,7 @@ function App() {
                 variant="contained"
                 onClick={onChangePlayer}
               >
-                {Player}
+                {player}
               </Button>
               <Button variant="contained" onClick={submitCode}>
                 submit
