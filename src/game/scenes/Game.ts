@@ -54,8 +54,9 @@ export class Game extends Scene {
   state: number[][];
   inputForA: string;
   inputForB: string;
-  movementA: string;
-  movementB: string;
+  movementA: string = "";
+  movementB: string = "";
+  totalStep = 5;
 
   constructor() {
     super("Game");
@@ -81,7 +82,8 @@ export class Game extends Scene {
   create() {
     // const { width, height } = this.scale;
     // Create platform
-
+    this.movementA = "";
+    this.movementB = "";
     localStorage.setItem("codeA", "");
     localStorage.setItem("codeB", "");
     localStorage.setItem("binaryCodeA", "");
@@ -111,7 +113,7 @@ export class Game extends Scene {
       // fontStyle: '900',
       fontSize: 18,
     });
-    this.textStepContent.setText(`${this.step}/30`);
+    this.textStepContent.setText(`${this.step}/${this.totalStep}`);
     this.textP1Header = this.add.text(310, 80, "PLAYER", {
       color: "#000",
       fontStyle: "900",
@@ -208,12 +210,12 @@ export class Game extends Scene {
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
   }
-  update(_: number, dt: number): void {
+  async update(_: number, dt: number) {
     this.CompileCode();
     if (this.ok && !this.isPause) {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;
-      if (this.step > 30) {
+      if (this.step > this.totalStep) {
         this.cameras.main.fadeOut(1000, 0, 0, 0);
         this.cameras.main.once("camerafadeoutcomplete", () => {
           const scorePlayer1 = this.scoreMap.getScore(1);
@@ -229,23 +231,43 @@ export class Game extends Scene {
         });
         return;
       }
-      this.RunCode();
-      if (this.output[1] !== undefined) {
+      await this.RunCode();
+      console.log(this.step, "next");
+      if (this.output[1].length > 0) {
+        let match: Boolean = false;
+
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] === this.output[1][0]) match = true;
+        }
         this.inputComponent.importInput(this.output[1][0]);
         this.inputBomb.importInput(this.output[1][0]);
-        this.movementA += this.output[1][0];
+
+        if (match === true) {
+          // this.inputComponent.importInput(this.output[1][0]);
+          // this.inputBomb.importInput(this.output[1][0]);
+          this.movementA += this.output[1][0];
+        }
       }
-      if (this.output[2] !== undefined) {
+      if (this.output[2].length > 0) {
+        let match: boolean = false;
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i] === this.output[2][0]) match = true;
+        }
         this.inputComponent2.importInput(this.output[2][0]);
         this.inputBomb2.importInput(this.output[2][0]);
-        this.movementB += this.output[2][0];
+        if (match === true) {
+          // console.log(this.movementB, "here");
+          // console.log(this.output[2], this.output[2] == undefined, "check");
+          this.movementB += this.output[2][0];
+        }
       }
-
+      // console.log(this.step, "next");
       this.time.delayedCall(1000, () => {
         this.ok = true;
       });
+      console.log("update");
       this.components.update(dt);
-      this.textStepContent.setText(`${this.step++}/30`);
+      this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
       this.textP1.setText(
         `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ""}`
       );
@@ -262,7 +284,7 @@ export class Game extends Scene {
     ) {
       this.isPause = !this.isPause;
       this.textNoti.setText("Press SPACE\nto start");
-    } else console.log("aren't ready");
+    }
   }
   getInputFromUser() {
     this.userInput = arr[Math.floor(5 * Math.random())];
@@ -295,6 +317,8 @@ export class Game extends Scene {
       });
     });
     this.inputForA = this.inputForB = "";
+    this.inputForA = `${this.step} ${this.totalStep}`;
+    this.inputForA += "\n";
     let startPoint = this.scoreMap.getStartPoint();
     let endPoint = this.scoreMap.getEndPoint();
     // get point
@@ -345,7 +369,7 @@ export class Game extends Scene {
         code: code,
         language: "cpp",
       });
-      console.log(response.data.error, "rere");
+      // console.log(response.data.error, "rere");
 
       if (response.data.error !== "no") {
         if (name === "binaryCodeA") {
@@ -368,8 +392,6 @@ export class Game extends Scene {
       localStorage.getItem("codeB") != null &&
       codeB !== localStorage.getItem("codeB")
     ) {
-      console.log("TRITRI2");
-
       codeB = localStorage.getItem("codeB")!;
       await getBinary(codeB, "binaryCodeB");
     }
@@ -380,8 +402,8 @@ export class Game extends Scene {
         code: binary,
         stdin: "",
       });
-      // console.log(response.data.stdout, "@@@@");
       this.output[id] = response.data.stdout;
+      console.log(this.step, " ", id, " data");
     };
     await getOutput(localStorage.getItem("binaryCodeA")!, 1);
     await getOutput(localStorage.getItem("binaryCodeB")!, 2);
