@@ -55,7 +55,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 10;
+  totalStep = 100;
 
   constructor() {
     super("Game");
