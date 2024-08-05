@@ -7,12 +7,13 @@ import { cpp } from "@codemirror/lang-cpp";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Autocomplete from "@mui/material/Autocomplete";
 import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  TextField,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,8 +27,6 @@ const darkTheme = createTheme({
 });
 const EXECUTOR_URL = import.meta.env.VITE_EXECUTOR_URL as string;
 
-const supported_languages = [{ label: "C++17" }, { label: "Python3" }];
-
 function App() {
   //  References to the PhaserGame component (game and scene are exposed)
   const phaserRef = useRef<IRefPhaserGame | null>(null);
@@ -35,6 +34,7 @@ function App() {
   const [player, setPlayer] = useState<string>("Player 1");
   const [isPlayer1Ready, setPlayer1Ready] = useState<boolean>(false);
   const [isPlayer2Ready, setPlayer2Ready] = useState<boolean>(false);
+  const [chosenLanguage, setChosenLanguage] = useState<string>("cpp");
 
   const onChangePlayer = () => {
     if (player === "Player 1") {
@@ -96,6 +96,10 @@ function App() {
   //   }
   // };
 
+  let handleChosenLanguageChange = (event: SelectChangeEvent) => {
+    setChosenLanguage(event.target.value as string);
+  };
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -110,13 +114,13 @@ function App() {
               >
                 {player}
               </Button>
-              <Autocomplete
-                id="language-select"
-                options={supported_languages}
-                defaultValue={supported_languages[0]}
-                sx={{ width: 140 }}
-                renderInput={(params) => <TextField {...params} />}
-              />
+              <Select
+                value={chosenLanguage}
+                onChange={handleChosenLanguageChange}
+              >
+                <MenuItem value={"cpp"}>C++ 17</MenuItem>
+                <MenuItem value={"py"}>Python 3</MenuItem>
+              </Select>
               <Button variant="contained" onClick={submitCode}>
                 submit
               </Button>
