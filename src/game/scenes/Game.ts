@@ -247,7 +247,9 @@ export class Game extends Scene {
           // this.inputBomb.importInput(this.output[1][0]);
           this.movementA += this.output[1][0];
         }
+        else this.movementA += "*";
       }
+      else this.movementA += "*";
       if (this.output[2].length > 0) {
         let match: boolean = false;
         for (let i = 0; i < arr.length; i++) {
@@ -260,7 +262,9 @@ export class Game extends Scene {
           // console.log(this.output[2], this.output[2] == undefined, "check");
           this.movementB += this.output[2][0];
         }
+        else this.movementB += "*";
       }
+      else this.movementB += "*";
       // console.log(this.step, "next");
       this.time.delayedCall(1000, () => {
         this.ok = true;
