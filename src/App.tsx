@@ -55,10 +55,10 @@ function App() {
       alert(`Compilation error with code's player ${id}`);
     } else {
       if (id === 1) {
-        localStorage.setItem("binaryCodeA", cppCode);
+        localStorage.setItem("binaryCodeA", response.data.src_as_b64);
         setPlayer1Ready(true);
       } else {
-        localStorage.setItem("binaryCodeB", cppCode);
+        localStorage.setItem("binaryCodeB", response.data.src_as_b64);
         setPlayer2Ready(true);
       }
     }

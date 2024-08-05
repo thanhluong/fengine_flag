@@ -363,40 +363,8 @@ export class Game extends Scene {
     this.inputForA += this.movementB;
     console.log(this.inputForA);
   }
-  async CompileCode() {
-    const getBinary = async (code: string, name: string) => {
-      const response = await axios.post(`${EXECUTOR_URL}/compile_and_get_b64`, {
-        code: code,
-        language: "cpp",
-      });
-      // console.log(response.data.error, "rere");
-
-      if (response.data.error !== "no") {
-        if (name === "binaryCodeA") {
-          alert("Error in Player1 Code");
-        } else alert("Error in Player2 Code");
-      } else localStorage.setItem(name, response.data.src_as_b64);
-      // console.log(response.data.src_as_b64);
-    };
-    if (
-      localStorage.getItem("codeA") !== "" &&
-      localStorage.getItem("codeA") !== null &&
-      codeA !== localStorage.getItem("codeA")
-    ) {
-      codeA = localStorage.getItem("codeA")!;
-      await getBinary(codeA, "binaryCodeA");
-    }
-
-    if (
-      localStorage.getItem("codeB") != "" &&
-      localStorage.getItem("codeB") != null &&
-      codeB !== localStorage.getItem("codeB")
-    ) {
-      codeB = localStorage.getItem("codeB")!;
-      await getBinary(codeB, "binaryCodeB");
-    }
-  }
   async RunCode() {
+    console.log("TRI");
     const getOutput = async (binary: string, id: number) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
