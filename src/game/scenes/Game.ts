@@ -211,7 +211,7 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, this.inputComponent2);
   }
   async update(_: number, dt: number) {
-    this.CompileCode();
+    // this.CompileCode();
     if (this.ok && !this.isPause) {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;

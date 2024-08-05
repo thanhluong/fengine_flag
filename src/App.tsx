@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-
+import axios from "axios";
 const defaultCppCode = `#include <iostream>`;
 
 const darkTheme = createTheme({
@@ -18,6 +18,7 @@ const darkTheme = createTheme({
     mode: "dark",
   },
 });
+const EXECUTOR_URL = import.meta.env.VITE_EXECUTOR_URL as string;
 
 function App() {
   //  References to the PhaserGame component (game and scene are exposed)
@@ -39,12 +40,38 @@ function App() {
 
   const onCodeChange = useCallback((val: string, _: any) => {
     setCppCode(val);
+    if (Player === "Player 1") {
+      setPlayer1Ready(false);
+    } else setPlayer2Ready(false);
   }, []);
+
+  const getBinaryCode = async (code: string, id: number) => {
+    const response = await axios.post(`${EXECUTOR_URL}/compile_and_get_b64`, {
+      code: code,
+      language: "cpp",
+    });
+    console.log(response.data.error);
+    if (response.data.error !== "no") {
+      alert(`Compilation error with code's player ${id}`);
+    } else {
+      if (id === 1) {
+        localStorage.setItem("binaryCodeA", cppCode);
+        setPlayer1Ready(true);
+      } else {
+        localStorage.setItem("binaryCodeB", cppCode);
+        setPlayer2Ready(true);
+      }
+    }
+  };
 
   const submitCode = () => {
     if (Player === "Player 1") {
       localStorage.setItem("codeA", cppCode);
-    } else localStorage.setItem("codeB", cppCode);
+      getBinaryCode(cppCode, 1);
+    } else {
+      localStorage.setItem("codeB", cppCode);
+      getBinaryCode(cppCode, 2);
+    }
   };
   // const addSprite = () => {
   //   if (phaserRef.current) {
