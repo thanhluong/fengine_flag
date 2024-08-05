@@ -7,7 +7,13 @@ import { cpp } from "@codemirror/lang-cpp";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import {
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  TextField,
+} from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import axios from "axios";
@@ -19,6 +25,8 @@ const darkTheme = createTheme({
   },
 });
 const EXECUTOR_URL = import.meta.env.VITE_EXECUTOR_URL as string;
+
+const supported_languages = [{ label: "C++17" }, { label: "Python3" }];
 
 function App() {
   //  References to the PhaserGame component (game and scene are exposed)
@@ -94,7 +102,7 @@ function App() {
       <div id="app">
         <div>
           <Stack direction="column" spacing={2}>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={1}>
               <Button
                 color="secondary"
                 variant="contained"
@@ -102,6 +110,13 @@ function App() {
               >
                 {player}
               </Button>
+              <Autocomplete
+                id="language-select"
+                options={supported_languages}
+                defaultValue={supported_languages[0]}
+                sx={{ width: 140 }}
+                renderInput={(params) => <TextField {...params} />}
+              />
               <Button variant="contained" onClick={submitCode}>
                 submit
               </Button>

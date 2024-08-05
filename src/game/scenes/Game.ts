@@ -55,7 +55,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 100;
+  totalStep = 10;
 
   constructor() {
     super("Game");
@@ -225,7 +225,7 @@ export class Game extends Scene {
           } else if (scorePlayer1 < scorePlayer2) {
             result = "Player 2";
           }
-          this.scene.start("GameOver", { result, scorePlayer1, scorePlayer2});
+          this.scene.start("GameOver", { result, scorePlayer1, scorePlayer2 });
           this.scene.stop();
         });
         return;
@@ -347,14 +347,18 @@ export class Game extends Scene {
 
     this.inputForB = this.inputForA;
     this.inputForA +=
-      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     this.inputForA +=
-      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
 
     this.inputForB +=
-      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     this.inputForB +=
-      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     // history of movement
     this.inputForB += this.movementB;
     this.inputForB += "\n";
