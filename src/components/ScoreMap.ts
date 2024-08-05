@@ -1,11 +1,9 @@
-import { Pair } from "matter";
-
 export default class ScoreMap {
   scores: number[][];
   state: number[][];
   numberSet: Set<number> = new Set<number>();
 
-  blockSize: 16;
+  blockSize: number = 16;
   startPoint: [number, number] = [4, 4];
   endPoint: [number, number] = [13, 13];
   numberQuantity = 6;
@@ -73,7 +71,7 @@ export default class ScoreMap {
             j * 16,
             16,
             16,
-            Phaser.Display.Color.GetColor(255, 200 - count * step, 0)
+            Phaser.Display.Color.GetColor(255, 200 - count * step, 0),
           )
           .setOrigin(0, 0);
       }
