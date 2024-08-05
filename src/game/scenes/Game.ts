@@ -40,7 +40,7 @@ export class Game extends Scene {
   scoreMap: ScoreMap;
   textStepHeader: Phaser.GameObjects.Text;
   textStepContent: Phaser.GameObjects.Text;
-  step = 0;
+  step = 1;
   textP1Header: Phaser.GameObjects.Text;
   textP1: Phaser.GameObjects.Text;
   textP2Header: Phaser.GameObjects.Text;
@@ -55,7 +55,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 5;
+  totalStep = 50;
 
   constructor() {
     super("Game");
@@ -230,6 +230,7 @@ export class Game extends Scene {
         });
         return;
       }
+      this.renderBoard();
       await this.RunCode();
       console.log(this.step, "next");
       if (this.output[1].length > 0) {
@@ -273,7 +274,7 @@ export class Game extends Scene {
       this.textP2.setText(
         `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ""}`,
       );
-      this.renderBoard();
+      // this.renderBoard();
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
     if (
@@ -342,16 +343,18 @@ export class Game extends Scene {
       this.inputForA += "\n";
     }
     // get position of player 1 and player 2
+    let blockSize = this.scoreMap.getBlockSize();
+
     this.inputForB = this.inputForA;
     this.inputForA +=
-      `${(this.player1.y - 8) / 16} ` + `${(this.player1.x - 8) / 16}\n`;
+      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     this.inputForA +=
-      `${(this.player2.y - 8) / 16} ` + `${(this.player2.x - 8) / 16}\n`;
+      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
 
     this.inputForB +=
-      `${(this.player2.y - 8) / 16} ` + `${(this.player2.x - 8) / 16}\n`;
+      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     this.inputForB +=
-      `${(this.player1.y - 8) / 16} ` + `${(this.player1.x - 8) / 16}\n`;
+      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` + `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
     // history of movement
     this.inputForB += this.movementB;
     this.inputForB += "\n";
@@ -364,15 +367,16 @@ export class Game extends Scene {
   }
   async RunCode() {
     console.log("TRI");
-    const getOutput = async (binary: string, id: number) => {
+    const getOutput = async (binary: string, id: number, input: string) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
         stdin: "",
       });
+      // console.log(input, "here");
       this.output[id] = response.data.stdout;
-      console.log(this.step, " ", id, " data");
+      // console.log(this.step, " ", id, " data");
     };
-    await getOutput(localStorage.getItem("binaryCodeA")!, 1);
-    await getOutput(localStorage.getItem("binaryCodeB")!, 2);
+    await getOutput(localStorage.getItem("binaryCodeA")!, 1, this.inputForA);
+    await getOutput(localStorage.getItem("binaryCodeB")!, 2, this.inputForB);
   }
 }
