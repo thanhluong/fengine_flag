@@ -55,7 +55,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 50;
+  totalStep = 10;
 
   constructor() {
     super("Game");
@@ -225,7 +225,7 @@ export class Game extends Scene {
           } else if (scorePlayer1 < scorePlayer2) {
             result = "Player 2";
           }
-          this.scene.start("GameOver", { result });
+          this.scene.start("GameOver", { result, scorePlayer1, scorePlayer2});
           this.scene.stop();
         });
         return;
@@ -328,7 +328,7 @@ export class Game extends Scene {
         if (this.state[i][j] === -1) {
           this.inputForA += "0 ";
         } else {
-          this.inputForA += scoreMap[i][j].toString();
+          this.inputForA += scoreMap[j][i].toString();
           this.inputForA += " ";
         }
       }
@@ -370,7 +370,7 @@ export class Game extends Scene {
     const getOutput = async (binary: string, id: number, input: string) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
-        stdin: "",
+        stdin: input,
       });
       // console.log(input, "here");
       this.output[id] = response.data.stdout;
