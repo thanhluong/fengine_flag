@@ -371,16 +371,17 @@ export class Game extends Scene {
   }
   async RunCode() {
     console.log("TRI");
-    const getOutput = async (binary: string, id: number, input: string) => {
+    const getOutput = async (binary: string, id: number, input: string, typeLanguage: string) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
         stdin: input,
+        language: typeLanguage
       });
       // console.log(input, "here");
       this.output[id] = response.data.stdout;
       // console.log(this.step, " ", id, " data");
     };
-    await getOutput(localStorage.getItem("binaryCodeA")!, 1, this.inputForA);
-    await getOutput(localStorage.getItem("binaryCodeB")!, 2, this.inputForB);
+    await getOutput(localStorage.getItem("binaryCodeA")!, 1, this.inputForA, localStorage.getItem("languageA")!);
+    await getOutput(localStorage.getItem("binaryCodeB")!, 2, this.inputForB, localStorage.getItem("languageB")!);
   }
 }

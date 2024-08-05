@@ -56,7 +56,7 @@ function App() {
   const getBinaryCode = async (code: string, id: number) => {
     const response = await axios.post(`${EXECUTOR_URL}/compile_and_get_b64`, {
       code: code,
-      language: "cpp",
+      language: chosenLanguage,
     });
     console.log(response.data.error);
     if (response.data.error !== "no") {
@@ -75,9 +75,11 @@ function App() {
   const submitCode = () => {
     if (player === "Player 1") {
       localStorage.setItem("codeA", cppCode);
+      localStorage.setItem("languageA", chosenLanguage);
       getBinaryCode(cppCode, 1);
     } else {
       localStorage.setItem("codeB", cppCode);
+      localStorage.setItem("languageB", chosenLanguage);
       getBinaryCode(cppCode, 2);
     }
   };
