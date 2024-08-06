@@ -55,7 +55,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 10;
+  totalStep = 64;
 
   constructor() {
     super("Game");
@@ -246,10 +246,8 @@ export class Game extends Scene {
           // this.inputComponent.importInput(this.output[1][0]);
           // this.inputBomb.importInput(this.output[1][0]);
           this.movementA += this.output[1][0];
-        }
-        else this.movementA += "*";
-      }
-      else this.movementA += "*";
+        } else this.movementA += "*";
+      } else this.movementA += "*";
       if (this.output[2].length > 0) {
         let match: boolean = false;
         for (let i = 0; i < arr.length; i++) {
@@ -261,10 +259,8 @@ export class Game extends Scene {
           // console.log(this.movementB, "here");
           // console.log(this.output[2], this.output[2] == undefined, "check");
           this.movementB += this.output[2][0];
-        }
-        else this.movementB += "*";
-      }
-      else this.movementB += "*";
+        } else this.movementB += "*";
+      } else this.movementB += "*";
       // console.log(this.step, "next");
       this.time.delayedCall(1000, () => {
         this.ok = true;
@@ -375,17 +371,32 @@ export class Game extends Scene {
   }
   async RunCode() {
     console.log("TRI");
-    const getOutput = async (binary: string, id: number, input: string, typeLanguage: string) => {
+    const getOutput = async (
+      binary: string,
+      id: number,
+      input: string,
+      typeLanguage: string,
+    ) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
         stdin: input,
-        language: typeLanguage
+        language: typeLanguage,
       });
       // console.log(input, "here");
       this.output[id] = response.data.stdout;
       // console.log(this.step, " ", id, " data");
     };
-    await getOutput(localStorage.getItem("binaryCodeA")!, 1, this.inputForA, localStorage.getItem("languageA")!);
-    await getOutput(localStorage.getItem("binaryCodeB")!, 2, this.inputForB, localStorage.getItem("languageB")!);
+    await getOutput(
+      localStorage.getItem("binaryCodeA")!,
+      1,
+      this.inputForA,
+      localStorage.getItem("languageA")!,
+    );
+    await getOutput(
+      localStorage.getItem("binaryCodeB")!,
+      2,
+      this.inputForB,
+      localStorage.getItem("languageB")!,
+    );
   }
 }
