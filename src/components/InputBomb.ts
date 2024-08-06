@@ -50,7 +50,7 @@ export default class InputBomb implements IComponent {
     }
   }
   spawnOnEnter() {
-    this.scene.time.delayedCall(1000, () => {
+    this.scene.time.delayedCall(1500, () => {
       this.stateMachine.setState("idle");
     });
     if (

@@ -22,6 +22,12 @@ const EXECUTOR_URL = import.meta.env.VITE_EXECUTOR_URL as string;
 const arr = ["L", "R", "U", "D", "X"];
 const tileSz = 16;
 
+const wait = function (time: number) {
+  return new Promise(function (resolve, _) {
+    setTimeout(resolve, time);
+  });
+};
+
 export class Game extends Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   components: ComponentService;
@@ -214,9 +220,13 @@ export class Game extends Scene {
     if (this.ok && !this.isPause) {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;
+      wait(1500).then(() => (this.ok = true));
+      // this.time.delayedCall(1000, () => {
+      //   this.ok = true;
+      // });
       if (this.step > this.totalStep) {
         // Out of step => Game over
-        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.cameras.main.fadeOut(1500, 0, 0, 0);
         this.cameras.main.once("camerafadeoutcomplete", () => {
           const scorePlayer1 = this.scoreMap.getScore(1);
           const scorePlayer2 = this.scoreMap.getScore(2);
@@ -234,47 +244,48 @@ export class Game extends Scene {
       this.renderBoard();
       await this.RunCode();
       console.log(this.step, "next");
-      if (this.output[1].length > 0) {
-        let match: Boolean = false;
-
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i] === this.output[1][0]) match = true;
-        }
-        this.inputComponent.importInput(this.output[1][0]);
-        this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
-
-        if (match === true) {
-          // this.inputComponent.importInput(this.output[1][0]);
-          // this.inputBomb.importInput(this.output[1][0]);
-          this.movementA += this.output[1][0];
-        } else this.movementA += "*";
-      } else this.movementA += "*";
-      if (this.output[2].length > 0) {
-        let match: boolean = false;
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i] === this.output[2][0]) match = true;
-        }
-        this.inputComponent2.importInput(this.output[2][0]);
-        this.inputBomb2.importInput(this.output[2][0], this.output[1][0]);
-        if (match === true) {
-          // console.log(this.movementB, "here");
-          // console.log(this.output[2], this.output[2] == undefined, "check");
-          this.movementB += this.output[2][0];
-        } else this.movementB += "*";
-      } else this.movementB += "*";
-      // console.log(this.step, "next");
-      this.time.delayedCall(1000, () => {
-        this.ok = true;
-      });
-      console.log("update");
-      this.components.update(dt);
       this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
-      this.textP1.setText(
-        `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ""}`
-      );
-      this.textP2.setText(
-        `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ""}`
-      );
+      // if (this.output[1].length > 0) {
+      //   let match: Boolean = false;
+
+      //   for (let i = 0; i < arr.length; i++) {
+      //     if (arr[i] === this.output[1][0]) match = true;
+      //   }
+      //   this.inputComponent.importInput(this.output[1][0]);
+      //   this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
+
+      //   if (match === true) {
+      //     // this.inputComponent.importInput(this.output[1][0]);
+      //     // this.inputBomb.importInput(this.output[1][0]);
+      //     this.movementA += this.output[1][0];
+      //   } else this.movementA += "*";
+      // } else this.movementA += "*";
+      // if (this.output[2].length > 0) {
+      //   let match: boolean = false;
+      //   for (let i = 0; i < arr.length; i++) {
+      //     if (arr[i] === this.output[2][0]) match = true;
+      //   }
+      //   this.inputComponent2.importInput(this.output[2][0]);
+      //   this.inputBomb2.importInput(this.output[2][0], this.output[1][0]);
+      //   if (match === true) {
+      //     // console.log(this.movementB, "here");
+      //     // console.log(this.output[2], this.output[2] == undefined, "check");
+      //     this.movementB += this.output[2][0];
+      //   } else this.movementB += "*";
+      // } else this.movementB += "*";
+
+      // console.log(this.step, "next");
+
+      console.log("update");
+
+      // Implement K-moves (without preprocesing)
+      this.updateKmove(dt, 0);
+      await wait(350);
+      this.updateKmove(dt, 1);
+      await wait(350);
+      this.updateKmove(dt, 2);
+      await wait(350);
+
       // this.renderBoard();
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
@@ -368,7 +379,7 @@ export class Game extends Scene {
     this.inputForA += this.movementA;
     this.inputForA += "\n";
     this.inputForA += this.movementB;
-    console.log(this.inputForA);
+    // console.log(this.inputForA);
   }
   async RunCode() {
     console.log("TRI");
@@ -399,5 +410,20 @@ export class Game extends Scene {
       this.inputForB,
       localStorage.getItem("languageB")!
     );
+  }
+  updateKmove(dt: number, k: number) {
+    console.log("Player 1 output ", this.output[1]);
+    this.inputComponent.importInput(this.output[1][k]);
+    this.inputBomb.importInput(this.output[1][k], this.output[2][k]);
+    this.inputComponent2.importInput(this.output[2][k]);
+    this.inputBomb2.importInput(this.output[2][k], this.output[1][k]);
+    this.components.update(dt);
+    this.textP1.setText(
+      `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(k) ?? ""}`
+    );
+    this.textP2.setText(
+      `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(k) ?? ""}`
+    );
+    console.log("Done move");
   }
 }

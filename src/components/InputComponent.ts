@@ -1,4 +1,4 @@
-import { IComponent } from '../service/ComponentService';
+import { IComponent } from "../service/ComponentService";
 
 const baseMoveDist = 16;
 const baseMoveTime = 300;
@@ -6,7 +6,7 @@ const baseMoveTime = 300;
 export default class InputComponent implements IComponent {
   private gameObject: Phaser.Physics.Arcade.Sprite;
   fences: Phaser.Tilemaps.TilemapLayer;
-  userInput: string = '';
+  userInput: string = "";
   speed: number = 100;
   init(go: Phaser.Physics.Arcade.Sprite) {
     this.gameObject = go;
@@ -15,9 +15,9 @@ export default class InputComponent implements IComponent {
     this.fences = fences;
   }
   update() {
-    if (this.userInput !== '') {
+    if (this.userInput !== "") {
       this.render(this.userInput);
-      this.userInput = '';
+      this.userInput = "";
     }
   }
   importInput(inp: string) {
@@ -29,24 +29,24 @@ export default class InputComponent implements IComponent {
       x: this.gameObject.x,
       y: this.gameObject.y,
     };
-    let key = 'idle';
+    let key = "idle";
     // console.log(inp);
-    if (inp === 'L') {
+    if (inp === "L") {
       nextPostition.x -= baseMoveDist;
-      key = 'run-side';
+      key = "run-side";
       this.gameObject.setFlipX(true);
-    } else if (inp === 'R') {
+    } else if (inp === "R") {
       nextPostition.x += baseMoveDist;
-      key = 'run-side';
+      key = "run-side";
       this.gameObject.setFlipX(false);
-    } else if (inp === 'U') {
+    } else if (inp === "U") {
       nextPostition.y -= baseMoveDist;
-      key = 'run-up';
-    } else if (inp === 'D') {
+      key = "run-up";
+    } else if (inp === "D") {
       nextPostition.y += baseMoveDist;
-      key = 'run-down';
-    } else if (inp === 'X') {
-      key = 'idle';
+      key = "run-down";
+    } else if (inp === "X") {
+      key = "idle";
     }
     const tile = this.fences.getTileAtWorldXY(nextPostition.x, nextPostition.y);
     if (tile == null) {
@@ -56,10 +56,17 @@ export default class InputComponent implements IComponent {
         y: nextPostition.y,
         duration: baseMoveTime,
         onUpdate: this.playAnim.bind(this, key),
-        onComplete: this.playAnim.bind(this, 'idle'),
+        onComplete: this.playAnim.bind(this, "idle"),
       });
       // console.log(nextPostition.x, nextPostition.y);
     } else {
+      scene.tweens.add({
+        targets: this.gameObject,
+        x: this.gameObject.x,
+        y: this.gameObject.y,
+        duration: baseMoveTime,
+        onUpdate: this.playAnim.bind(this, "idle"),
+      });
       // console.log(this.gameObject.x, this.gameObject.y);
     }
   }
