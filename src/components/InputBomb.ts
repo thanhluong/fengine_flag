@@ -4,6 +4,12 @@ import StateMachine from "../statemachine/StateMachine";
 import Bomb from "../gameobjects/Bomb";
 import ScoreMap from "./ScoreMap";
 
+const wait = function (time: number) {
+  return new Promise(function (resolve, _) {
+    setTimeout(resolve, time);
+  });
+};
+
 export default class InputBomb implements IComponent {
   private userInput: string = "";
   private enemyInput: string = "";
@@ -50,9 +56,10 @@ export default class InputBomb implements IComponent {
     }
   }
   spawnOnEnter() {
-    this.scene.time.delayedCall(1500, () => {
-      this.stateMachine.setState("idle");
-    });
+    // this.scene.time.delayedCall(1500, () => {
+    //   this.stateMachine.setState("idle");
+    // });
+    wait(1500).then(() => this.stateMachine.setState("idle"));
     if (
       this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
       this.enemyInput === "X"
