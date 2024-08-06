@@ -35,6 +35,7 @@ function App() {
   const [isPlayer1Ready, setPlayer1Ready] = useState<boolean>(false);
   const [isPlayer2Ready, setPlayer2Ready] = useState<boolean>(false);
   const [chosenLanguage, setChosenLanguage] = useState<string>("cpp");
+  const [chosenK, setChosenK] = useState<string>("1");
 
   const onChangePlayer = () => {
     if (player === "Player 1") {
@@ -102,12 +103,21 @@ function App() {
     setChosenLanguage(event.target.value as string);
   };
 
+  let handleChosenKChange = (event: SelectChangeEvent) => {
+    setChosenK(event.target.value as string);
+  };
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div id="app">
         <div>
           <Stack direction="column" spacing={2}>
+            <Select value={chosenK} onChange={handleChosenKChange}>
+              <MenuItem value={"1"}>K=1</MenuItem>
+              <MenuItem value={"2"}>K=2</MenuItem>
+              <MenuItem value={"3"}>K=3</MenuItem>
+            </Select>
             <Stack direction="row" spacing={1}>
               <Button
                 color="secondary"
