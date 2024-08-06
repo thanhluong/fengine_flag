@@ -4,8 +4,8 @@ export default class ScoreMap {
   numberSet: Set<number> = new Set<number>();
 
   blockSize: number = 16;
-  startPoint: [number, number] = [4, 4];
-  endPoint: [number, number] = [13, 13];
+  startPoint: [number, number] = [1, 1];
+  endPoint: [number, number] = [16, 16];
   numberQuantity = 6;
 
   constructor() {
