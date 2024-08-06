@@ -62,7 +62,7 @@ export class Game extends Scene {
   movementA: string = "";
   movementB: string = "";
   totalStep = 64;
-
+  stringLength: number = 3;
   constructor() {
     super("Game");
   }
@@ -217,6 +217,44 @@ export class Game extends Scene {
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
   }
+  checkInput(input: string) {
+    if(input.length > this.stringLength) return false;
+    let count = 0;
+    let letter = 0;
+
+    for (let i = 0; i < input.length; i++) {
+      if(input[i] === "X") count++;
+      for(let j = 0; j < arr.length; j++)
+      {
+        if(input[i] === arr[j]) letter++;
+      }
+    }
+    if(letter != input.length) return false;
+    if(count > 1) return false;
+    if(count === 1)
+    {
+      if(input.length > 1) return false;
+    }
+    return true;
+  }
+  processInput(id: number)
+  {
+    if(this.checkInput(this.output[id]))
+    {
+      if(id === 1) this.movementA += this.output[id];
+      else this.movementB += this.output[id];
+      while(this.output[id].length < this.stringLength)
+      {
+        this.output[id] += "*";
+      }
+    }
+    else
+    {
+      if(id === 1) this.movementA += "*";
+      else this.movementB += "*";
+      this.output[id] = "***";
+    }
+  }
   async update(_: number, dt: number) {
     // this.CompileCode();
     if (this.ok && !this.isPause) {
@@ -247,39 +285,41 @@ export class Game extends Scene {
       await this.RunCode();
       console.log(this.step, "next");
       this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
-      if (this.output[1].length > 0) {
-        let match: Boolean = false;
-
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i] === this.output[1][0]) match = true;
-        }
-        this.inputComponent.importInput(this.output[1][0]);
-        this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
-
-        if (match === true) {
-          // this.inputComponent.importInput(this.output[1][0]);
-          // this.inputBomb.importInput(this.output[1][0]);
-          this.movementA += this.output[1][0];
-        } else this.movementA += "*";
-      } else this.movementA += "*";
-      if (this.output[2].length > 0) {
-        let match: boolean = false;
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i] === this.output[2][0]) match = true;
-        }
-        this.inputComponent2.importInput(this.output[2][0]);
-        this.inputBomb2.importInput(this.output[2][0], this.output[1][0]);
-        if (match === true) {
-          // console.log(this.movementB, "here");
-          // console.log(this.output[2], this.output[2] == undefined, "check");
-          this.movementB += this.output[2][0];
-        } else this.movementB += "*";
-      } else this.movementB += "*";
+      // if (this.output[1].length > 0) {
+      //   let match: Boolean = false;
+      //
+      //   for (let i = 0; i < arr.length; i++) {
+      //     if (arr[i] === this.output[1][0]) match = true;
+      //   }
+      //   this.inputComponent.importInput(this.output[1][0]);
+      //   this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
+      //
+      //   if (match === true) {
+      //     // this.inputComponent.importInput(this.output[1][0]);
+      //     // this.inputBomb.importInput(this.output[1][0]);
+      //     this.movementA += this.output[1][0];
+      //   } else this.movementA += "*";
+      // } else this.movementA += "*";
+      // if (this.output[2].length > 0) {
+      //   let match: boolean = false;
+      //   for (let i = 0; i < arr.length; i++) {
+      //     if (arr[i] === this.output[2][0]) match = true;
+      //   }
+      //   this.inputComponent2.importInput(this.output[2][0]);
+      //   this.inputBomb2.importInput(this.output[2][0], this.output[1][0]);
+      //   if (match === true) {
+      //     // console.log(this.movementB, "here");
+      //     // console.log(this.output[2], this.output[2] == undefined, "check");
+      //     this.movementB += this.output[2][0];
+      //   } else this.movementB += "*";
+      // } else this.movementB += "*";
 
       // console.log(this.step, "next");
-
+      console.log(this.output[1], " ", this.output[2]);
+      this.processInput(1);
+      this.processInput(2);
       console.log("update");
-
+      console.log(this.output[1], " ", this.output[2]);
       // Implement K-moves (without preprocesing input)
       this.updateKmove(dt, 0);
       await wait(350);
@@ -384,7 +424,6 @@ export class Game extends Scene {
     // console.log(this.inputForA);
   }
   async RunCode() {
-    console.log("TRI");
     const getOutput = async (
       binary: string,
       id: number,
@@ -414,7 +453,7 @@ export class Game extends Scene {
     );
   }
   updateKmove(dt: number, k: number) {
-    console.log("Player 1 output ", this.output[1]);
+    // console.log("Player 1 output ", this.output[1]);
     this.inputComponent.importInput(this.output[1][k]);
     this.inputBomb.importInput(this.output[1][k], this.output[2][k]);
     this.inputComponent2.importInput(this.output[2][k]);
