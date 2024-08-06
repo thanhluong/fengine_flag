@@ -20,13 +20,16 @@ export default class InputBomb implements IComponent {
   private scoreMap: ScoreMap;
   key: string;
   bombs: Physics.Arcade.StaticGroup;
+  enemyBombs: Physics.Arcade.StaticGroup;
   constructor(
     bombs: Physics.Arcade.StaticGroup,
+    enemyBombs: Physics.Arcade.StaticGroup,
     enemy: Phaser.Physics.Arcade.Sprite,
     key: string,
     scroreMap: ScoreMap
   ) {
     this.bombs = bombs;
+    this.enemyBombs = enemyBombs;
     this.enemy = enemy;
     this.key = key;
     this.scoreMap = scroreMap;
@@ -73,14 +76,15 @@ export default class InputBomb implements IComponent {
     }
     if (enemyBomb) console.log("Overlap");
     enemyBomb?.destroy();
-
-    const bomb = new Bomb(
-      this.scene,
-      this.gameObject.x,
-      this.gameObject.y,
-      this.key
-    );
-    this.bombs.add(bomb);
+    if (!this.checkBombAt(this.gameObject.x, this.gameObject.y)) {
+      const bomb = new Bomb(
+        this.scene,
+        this.gameObject.x,
+        this.gameObject.y,
+        this.key
+      );
+      this.bombs.add(bomb);
+    }
   }
   importInput(userInput: string, enemyInput: string) {
     this.userInput = userInput;
@@ -101,7 +105,7 @@ export default class InputBomb implements IComponent {
     return res;
   }
   getEnemyBomb(x: number, y: number) {
-    const bombs = this.bombs.getChildren();
+    const bombs = this.enemyBombs.getChildren();
     let res!: Phaser.Physics.Arcade.Sprite;
     bombs.forEach(b => {
       const bomb = b as Phaser.Physics.Arcade.Sprite;

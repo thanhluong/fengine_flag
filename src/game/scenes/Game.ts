@@ -150,7 +150,7 @@ export class Game extends Scene {
     let startPoint = this.scoreMap.getStartPoint();
 
     this.player1 = this.physics.add.sprite(
-      tileSz * startPoint[0] + tileSz * 0.5,
+      tileSz * endPoint[1] + tileSz * 0.5,
       tileSz * endPoint[1] + tileSz * 0.5,
       "cute1"
     );
@@ -187,6 +187,7 @@ export class Game extends Scene {
     this.components.addComponent(this.player1, new KeyboardAnimation("cute1"));
     this.inputBomb = new InputBomb(
       this.bombs,
+      this.bombs2,
       this.player2,
       "bomb",
       this.scoreMap
@@ -207,6 +208,7 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, new KeyboardAnimation("cute2"));
     this.inputBomb2 = new InputBomb(
       this.bombs2,
+      this.bombs,
       this.player1,
       "flag-blue",
       this.scoreMap
