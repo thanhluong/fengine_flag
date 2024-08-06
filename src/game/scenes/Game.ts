@@ -208,8 +208,6 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
-
-    this.renderBoard();
   }
   async update(_: number, dt: number) {
     // this.CompileCode();
@@ -233,6 +231,7 @@ export class Game extends Scene {
         });
         return;
       }
+      this.renderBoard();
       await this.RunCode();
       console.log(this.step, "next");
       if (this.output[1].length > 0) {
