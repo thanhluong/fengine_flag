@@ -1,11 +1,12 @@
-import Phaser, { Physics, Scene } from 'phaser';
-import { IComponent } from '../service/ComponentService';
-import StateMachine from '../statemachine/StateMachine';
-import Bomb from '../gameobjects/Bomb';
-import ScoreMap from './ScoreMap';
+import Phaser, { Physics, Scene } from "phaser";
+import { IComponent } from "../service/ComponentService";
+import StateMachine from "../statemachine/StateMachine";
+import Bomb from "../gameobjects/Bomb";
+import ScoreMap from "./ScoreMap";
 
 export default class InputBomb implements IComponent {
-  private userInput: string = '';
+  private userInput: string = "";
+  private enemyInput: string = "";
   private gameObject: Phaser.Physics.Arcade.Sprite;
   private enemy: Phaser.Physics.Arcade.Sprite;
   private stateMachine: StateMachine;
@@ -23,60 +24,60 @@ export default class InputBomb implements IComponent {
     this.enemy = enemy;
     this.key = key;
     this.scoreMap = scroreMap;
-    this.stateMachine = new StateMachine(this, 'bomb_spawn');
+    this.stateMachine = new StateMachine(this, "bomb_spawn");
   }
   init(go: Phaser.GameObjects.GameObject) {
     this.gameObject = go as Phaser.Physics.Arcade.Sprite;
     this.scene = this.gameObject.scene;
     this.stateMachine
-      .addState('idle', {
+      .addState("idle", {
         onEnter: this.idleOnEnter,
         onUpdate: this.idleOnUpdate,
       })
-      .addState('spawn', {
+      .addState("spawn", {
         onEnter: this.spawnOnEnter,
       })
-      .setState('idle');
+      .setState("idle");
   }
   update(dt: number) {
     this.stateMachine.update(dt);
   }
   idleOnEnter() {}
   idleOnUpdate() {
-    if (this.userInput === 'X') {
-      console.log('Start set bomb');
-      this.stateMachine.setState('spawn');
+    if (this.userInput === "X") {
+      console.log("Start set bomb");
+      this.stateMachine.setState("spawn");
     }
   }
   spawnOnEnter() {
-    if (
-      !this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
-      !this.checkBombAt(this.gameObject.x, this.gameObject.y)
-    ) {
-      const enemyBomb = this.getEnemyBomb(this.gameObject.x, this.gameObject.y);
-      if (this.key === 'bomb') {
-        this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 1);
-      } else if (this.key === 'flag-blue') {
-        this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 2);
-      }
-      if (enemyBomb) console.log('Overlap');
-      enemyBomb?.destroy();
-
-      const bomb = new Bomb(
-        this.scene,
-        this.gameObject.x,
-        this.gameObject.y,
-        this.key
-      );
-      this.bombs.add(bomb);
-    }
-
     this.scene.time.delayedCall(1000, () => {
-      this.stateMachine.setState('idle');
+      this.stateMachine.setState("idle");
     });
+    if (
+      this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
+      this.enemyInput === "X"
+    )
+      return; // 2 player cannot spawn bomb at the same time and place
+    const enemyBomb = this.getEnemyBomb(this.gameObject.x, this.gameObject.y);
+    if (this.key === "bomb") {
+      this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 1);
+    } else if (this.key === "flag-blue") {
+      this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 2);
+    }
+    if (enemyBomb) console.log("Overlap");
+    enemyBomb?.destroy();
+
+    const bomb = new Bomb(
+      this.scene,
+      this.gameObject.x,
+      this.gameObject.y,
+      this.key
+    );
+    this.bombs.add(bomb);
   }
-  importInput(inp: string) {
-    this.userInput = inp;
+  importInput(userInput: string, enemyInput: string) {
+    this.userInput = userInput;
+    this.enemyInput = enemyInput;
     // console.log('Bom:', inp);
   }
   checkBombAt(x: number, y: number) {
