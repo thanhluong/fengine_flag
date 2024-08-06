@@ -208,6 +208,8 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
     this.components.addComponent(this.player2, this.inputComponent2);
+
+    this.renderBoard();
   }
   async update(_: number, dt: number) {
     // this.CompileCode();
@@ -215,6 +217,7 @@ export class Game extends Scene {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;
       if (this.step > this.totalStep) {
+        // Out of step => Game over
         this.cameras.main.fadeOut(1000, 0, 0, 0);
         this.cameras.main.once("camerafadeoutcomplete", () => {
           const scorePlayer1 = this.scoreMap.getScore(1);
@@ -230,7 +233,6 @@ export class Game extends Scene {
         });
         return;
       }
-      this.renderBoard();
       await this.RunCode();
       console.log(this.step, "next");
       if (this.output[1].length > 0) {
