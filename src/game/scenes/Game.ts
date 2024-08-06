@@ -146,7 +146,7 @@ export class Game extends Scene {
     this.player1 = this.physics.add.sprite(
       tileSz * startPoint[0] + tileSz * 0.5,
       tileSz * endPoint[1] + tileSz * 0.5,
-      "cute1",
+      "cute1"
     );
     this.player1
       .setBodySize(this.player1.width / 3, this.player1.height / 3)
@@ -157,7 +157,7 @@ export class Game extends Scene {
     this.player2 = this.physics.add.sprite(
       tileSz * endPoint[1] + tileSz * 0.5,
       tileSz * endPoint[1] + tileSz * 0.5,
-      "cute2",
+      "cute2"
     );
     this.player2
       .setBodySize(this.player2.width / 3, this.player2.height / 3)
@@ -172,18 +172,18 @@ export class Game extends Scene {
     this.components = new ComponentService();
     this.components.addComponent(
       this.player1,
-      new KeyboardMovement(this.cursors),
+      new KeyboardMovement(this.cursors)
     );
     this.components.addComponent(
       this.player1,
-      new KeyboardMovement(this.cursors),
+      new KeyboardMovement(this.cursors)
     );
     this.components.addComponent(this.player1, new KeyboardAnimation("cute1"));
     this.inputBomb = new InputBomb(
       this.bombs,
       this.player2,
       "bomb",
-      this.scoreMap,
+      this.scoreMap
     );
     this.components.addComponent(this.player1, this.inputBomb);
     this.inputComponent = new InputComponent(this.fences);
@@ -192,18 +192,18 @@ export class Game extends Scene {
     // Add player2 components
     this.components.addComponent(
       this.player2,
-      new KeyboardMovement(this.cursors),
+      new KeyboardMovement(this.cursors)
     );
     this.components.addComponent(
       this.player2,
-      new KeyboardMovement(this.cursors),
+      new KeyboardMovement(this.cursors)
     );
     this.components.addComponent(this.player2, new KeyboardAnimation("cute2"));
     this.inputBomb2 = new InputBomb(
       this.bombs2,
       this.player1,
       "flag-blue",
-      this.scoreMap,
+      this.scoreMap
     );
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
@@ -240,7 +240,7 @@ export class Game extends Scene {
           if (arr[i] === this.output[1][0]) match = true;
         }
         this.inputComponent.importInput(this.output[1][0]);
-        this.inputBomb.importInput(this.output[1][0]);
+        this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
 
         if (match === true) {
           // this.inputComponent.importInput(this.output[1][0]);
@@ -254,7 +254,7 @@ export class Game extends Scene {
           if (arr[i] === this.output[2][0]) match = true;
         }
         this.inputComponent2.importInput(this.output[2][0]);
-        this.inputBomb2.importInput(this.output[2][0]);
+        this.inputBomb2.importInput(this.output[2][0], this.output[1][0]);
         if (match === true) {
           // console.log(this.movementB, "here");
           // console.log(this.output[2], this.output[2] == undefined, "check");
@@ -269,10 +269,10 @@ export class Game extends Scene {
       this.components.update(dt);
       this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
       this.textP1.setText(
-        `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ""}`,
+        `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(0) ?? ""}`
       );
       this.textP2.setText(
-        `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ""}`,
+        `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(0) ?? ""}`
       );
       // this.renderBoard();
     }
@@ -292,7 +292,7 @@ export class Game extends Scene {
   renderBorder(layer: Phaser.Tilemaps.TilemapLayer) {
     const debugGraphics = this.add.graphics().setAlpha(0.5);
     debugGraphics.lineStyle(2, 0xffffff, 0.25);
-    layer.forEachTile((tile) => {
+    layer.forEachTile(tile => {
       if (tile.index !== -1) {
         const x = tile.getLeft();
         const y = tile.getTop();
@@ -375,7 +375,7 @@ export class Game extends Scene {
       binary: string,
       id: number,
       input: string,
-      typeLanguage: string,
+      typeLanguage: string
     ) => {
       const response = await axios.post(`${EXECUTOR_URL}/run_code`, {
         code: binary,
@@ -390,13 +390,13 @@ export class Game extends Scene {
       localStorage.getItem("binaryCodeA")!,
       1,
       this.inputForA,
-      localStorage.getItem("languageA")!,
+      localStorage.getItem("languageA")!
     );
     await getOutput(
       localStorage.getItem("binaryCodeB")!,
       2,
       this.inputForB,
-      localStorage.getItem("languageB")!,
+      localStorage.getItem("languageB")!
     );
   }
 }
