@@ -240,7 +240,6 @@ export class Game extends Scene {
         for (let i = 0; i < arr.length; i++) {
           if (arr[i] === this.output[1][0]) match = true;
         }
-        console.log(this.output[1]);
         this.inputComponent.importInput(this.output[1][0]);
         this.inputBomb.importInput(this.output[1][0], this.output[2][0]);
 
