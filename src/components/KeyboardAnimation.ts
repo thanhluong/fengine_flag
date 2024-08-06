@@ -21,21 +21,7 @@ export default class KeyboardAnimation implements IComponent {
 
   start() {}
 
-  update() {
-    // if (this.cursors.left.isDown) {
-    //   this.gameObject.play('run-side', true);
-    //   this.gameObject.setFlipX(true);
-    // } else if (this.cursors.right.isDown) {
-    //   this.gameObject.play('run-side', true);
-    //   this.gameObject.setFlipX(false);
-    // } else if (this.cursors.up.isDown) {
-    //   this.gameObject.play('run-up', true);
-    // } else if (this.cursors.down.isDown) {
-    //   this.gameObject.play('run-down', true);
-    // } else {
-    //   // this.gameObject.play('idle');
-    // }
-  }
+  update() {}
 
   createAnims() {
     this.gameObject.anims.create({
