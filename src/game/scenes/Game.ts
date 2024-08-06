@@ -63,7 +63,7 @@ export class Game extends Scene {
 
   preload() {
     this.load.setPath("assets");
-    this.load.tilemapTiledJSON("tilemap", "Tilemap/tilemap.json");
+    this.load.tilemapTiledJSON("tilemap", "Tilemap/tilemap16x16.json");
     this.load.image("grass-ts", "Tilemap/Grass.png");
     this.load.image("fences-ts", "Tilemap/Fences.png");
     this.load.image("bomb", "Character/bomb.png");
