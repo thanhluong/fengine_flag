@@ -239,6 +239,7 @@ export class Game extends Scene {
     return true;
   }
   processInput(id: number) {
+    this.output[id] = this.output[id].trimEnd();
     if (this.checkInput(this.output[id])) {
       if (id === 1) this.movementA += this.output[id];
       else this.movementB += this.output[id];
