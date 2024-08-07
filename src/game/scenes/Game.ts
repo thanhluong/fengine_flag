@@ -116,7 +116,7 @@ export class Game extends Scene {
     this.grass = this.map.createLayer("grass", grassTileset!)!;
     this.scoreMap = new ScoreMap();
     this.scoreMap.create();
-    this.scoreMap.createMap(this);
+    this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;
     this.renderBorder(this.grass);
 
