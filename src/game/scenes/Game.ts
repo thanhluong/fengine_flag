@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 3;
+const mapIndex = 1;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -110,7 +110,7 @@ export class Game extends Scene {
     this.grass = this.map.createLayer("grass", grassTileset!)!;
     this.scoreMap = new ScoreMap();
     this.scoreMap.create();
-    this.scoreMap.createMap(this);
+    this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;
     this.renderBorder(this.grass);
 

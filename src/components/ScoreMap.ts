@@ -1,3 +1,4 @@
+import {ScoreArray} from './ScoreArray';
 export default class ScoreMap {
   scores: number[][];
   state: number[][];
@@ -6,8 +7,15 @@ export default class ScoreMap {
   blockSize: number = 16;
   startPoint: [number, number] = [1, 1];
   endPoint: [number, number] = [16, 16];
-  numberQuantity = 6;
+  numberQuantity = 15;
 
+  scoreArray: number[][][];
+  scoreArrayInstance: ScoreArray;
+  idArray: number = 1;
+  defaultRed: number = 255;
+  defaultGreen: number = 255;
+  defaultBlue: number = 103;
+  fiboNumber: number[] = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610];
   constructor() {
     this.scores = [];
     this.state = [];
@@ -23,12 +31,9 @@ export default class ScoreMap {
     this.create();
   }
   create() {
-    for (let i = 0; i < 20; i++) {
-      for (let j = 0; j < 20; j++) {
-        this.scores[i][j] = Phaser.Math.Between(0, this.numberQuantity);
-        this.scores[i][j] = Math.pow(2, this.scores[i][j]);
-      }
-    }
+    // this.scoreArrayInstance = new ScoreArray();
+    // this.scores = this.scoreArrayInstance.getScoreArray(this.idArray);
+    // console.log(this.scores);
   }
   getScoreMap() {
     return this.scores;
@@ -46,32 +51,44 @@ export default class ScoreMap {
       (y - this.blockSize / 2) / this.blockSize
     ];
   }
-  createMap(scene: Phaser.Scene) {
-    for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
-      for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
-        this.numberSet.add(this.scores[i][j]);
-      }
-    }
+  createMap(scene: Phaser.Scene, tilemap: Phaser.Tilemaps.Tilemap) {
+    this.scoreArrayInstance = new ScoreArray();
+    this.scores = this.scoreArrayInstance.getScoreArray(this.idArray);
 
+    // tilemap.getLayer('fence');
+    const fence = tilemap.getLayer('fence')!.data;
+    console.log(fence);
     let step = 200 / this.numberQuantity;
 
     for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
       for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         let count = -1;
 
-        let curretValue = this.scores[i][j];
-        while (curretValue > 0) {
-          curretValue /= 2;
-          count++;
+        for(let k = 1; k <= this.numberQuantity; k++)
+        {
+          if(this.scores[i][j] === this.fiboNumber[k])
+          {
+            count = k;
+            break;
+          }
         }
+        let red = 255;
+        let green = 200 - count * step;
+        let blue = 0;
 
+        if(this.scores[i][j] === 0 || fence[j][i].index !== -1)
+        {
+          red = this.defaultRed;
+          green = this.defaultGreen;
+          blue = this.defaultBlue;
+        }
         scene.add
           .rectangle(
             i * 16,
             j * 16,
             16,
             16,
-            Phaser.Display.Color.GetColor(255, 200 - count * step, 0),
+            Phaser.Display.Color.GetColor(red, green, blue),
           )
           .setOrigin(0, 0);
       }
