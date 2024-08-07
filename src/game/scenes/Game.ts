@@ -10,9 +10,13 @@ import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const mapIndex = 3;
-const updateDelay = 3000;
+const updateDelay = 2000;
 const moveDelay = 450;
-
+const startCoords = [
+  [1, 1],
+  [2, 8],
+  [1, 8],
+];
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
@@ -50,7 +54,7 @@ export class Game extends Scene {
   scoreMap: ScoreMap;
   textStepHeader: Phaser.GameObjects.Text;
   textStepContent: Phaser.GameObjects.Text;
-  step = 1;
+  step = 0;
   textP1Header: Phaser.GameObjects.Text;
   textP1: Phaser.GameObjects.Text;
   textP2Header: Phaser.GameObjects.Text;
@@ -66,6 +70,8 @@ export class Game extends Scene {
   movementA: string = "";
   movementB: string = "";
   totalStep = 64;
+  beginPosition1 = [];
+  beginPosition2 = [];
   stringLength: number = 3;
   constructor() {
     super("Game");
@@ -252,21 +258,21 @@ export class Game extends Scene {
         x = this.player2.x;
         y = this.player2.y;
       }
-      for(let i = 0; i < this.output[id].length; i++) {
+      for (let i = 0; i < this.output[id].length; i++) {
         if (this.output[id][i] === "L") x -= tileSz;
         if (this.output[id][i] === "R") x += tileSz;
         if (this.output[id][i] === "U") y -= tileSz;
         if (this.output[id][i] === "D") y += tileSz;
         const tile = this.fences.getTileAtWorldXY(x, y);
-        console.log(x, y, tile, "here");
+        // console.log(x, y, tile, "here");
         if (tile !== null) return false;
       }
       return true;
-    }
+    };
     if (this.checkInput(this.output[id])) {
       if (!canMove(id)) {
         this.output[id] = "***";
-        if(id === 1) this.movementA += "*";
+        if (id === 1) this.movementA += "*";
         else this.movementB += "*";
         return;
       }
@@ -306,11 +312,20 @@ export class Game extends Scene {
       }
       this.renderBoard();
       await this.RunCode();
-      if (this.step === 1) {
+      if (this.step === 0) {
+        this.output[1] = "1 8";
+        this.output[2] = "2 8";
+        this.getCoord(this.output[1], 1);
+        this.getCoord(this.output[2], 2);
+        // this.renderBoard();
+        this.step++;
+        return;
       }
+      // this.renderBoard();
       this.textStepContent.setText(`${this.step}/${this.totalStep}`);
       this.processInput(1);
       this.processInput(2);
+
       console.log(this.output[1], this.output[2]);
       // Implement K-moves (preprocessed input)
       this.updateKmove(dt, 0);
@@ -365,57 +380,58 @@ export class Game extends Scene {
       });
     });
     this.inputForA = this.inputForB = "";
-    this.inputForA = `${this.step} ${this.totalStep}`;
-    this.inputForA += "\n";
+    if (this.step === 0) {
+      this.inputForA = this.inputForB = "1\n";
+    }
     let startPoint = this.scoreMap.getStartPoint();
     let endPoint = this.scoreMap.getEndPoint();
     // get point
-
-    for (let i = startPoint[0]; i <= endPoint[0]; i++) {
-      for (let j = startPoint[1]; j <= endPoint[1]; j++) {
-        if (this.state[i][j] === -1) {
-          this.inputForA += "0 ";
-        } else {
-          this.inputForA += scoreMap[j][i].toString();
-          this.inputForA += " ";
-        }
-      }
-      this.inputForA += "\n";
-    }
-    //
-    for (let i = startPoint[0]; i <= endPoint[0]; i++) {
-      for (let j = startPoint[1]; j <= endPoint[1]; j++) {
-        this.inputForA += this.state[i][j].toString();
-        this.inputForA += " ";
-      }
-      this.inputForA += "\n";
-    }
+    this.renderMapScoreAndState(startPoint, endPoint, scoreMap);
     // get position of player 1 and player 2
     let blockSize = this.scoreMap.getBlockSize();
 
     this.inputForB = this.inputForA;
-    this.inputForA +=
-      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-      `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
-    this.inputForA +=
-      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-      `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+    if (this.step !== 0) {
+      this.inputForA +=
+        `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+        `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+      this.inputForA += this.scoreMap.getScore(1).toString() + " \n";
+      this.inputForA +=
+        `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+        `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+      this.inputForA += this.scoreMap.getScore(2).toString() + " \n";
 
-    this.inputForB +=
-      `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-      `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
-    this.inputForB +=
-      `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-      `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1}\n`;
+      this.inputForB +=
+        `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+        `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+      this.inputForA += this.scoreMap.getScore(2).toString() + " \n";
+      this.inputForB +=
+        `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+        `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+      this.inputForB += this.scoreMap.getScore(1).toString() + " \n";
+
+      this.inputForA = `${this.step} ${this.totalStep}`;
+      this.inputForA += "\n";
+    }
+
+    if (this.step === 0) {
+      startCoords.forEach(
+        coord => (this.inputForA += `${coord[0]} ${coord[1]} `)
+      );
+    }
     // history of movement
-    this.inputForB += this.movementB;
-    this.inputForB += "\n";
-    this.inputForB += this.movementA;
+    if (this.step !== 0) {
+      this.inputForB += this.movementB;
+      this.inputForB += "\n";
+      this.inputForB += this.movementA;
 
-    this.inputForA += this.movementA;
-    this.inputForA += "\n";
-    this.inputForA += this.movementB;
+      this.inputForA += this.movementA;
+      this.inputForA += "\n";
+      this.inputForA += this.movementB;
+    }
+
     console.log(this.inputForA);
+    // return this.inputForA;
   }
   async RunCode() {
     const getOutput = async (
@@ -460,5 +476,56 @@ export class Game extends Scene {
       `\nScore:${this.scoreMap.getScore(2)}\nMove:${this.output[2]?.charAt(k) ?? ""}`
     );
     console.log("Done move");
+  }
+  getCoord(coordStr: string, id: number) {
+    const coord = coordStr.trimEnd().split(" ");
+    // console.log(coord);
+    let startX = Number(coord[0]);
+    let startY = Number(coord[1]);
+    const isValid = startCoords.some(crd => {
+      return startX === crd[0] && startY === crd[1];
+    });
+    if (!isValid) {
+      startX = this.tileToPixel(startCoords[0][0]);
+      startY = this.tileToPixel(startCoords[0][0]);
+    }
+    if (id === 1) {
+      this.player1.x = this.tileToPixel(startX);
+      this.player1.y = this.tileToPixel(startY);
+    }
+    if (id == 2) {
+      this.player2.x = this.tileToPixel(startX);
+      this.player2.y = this.tileToPixel(startY);
+    }
+    // console.log(startX, startY);
+  }
+  tileToPixel(idx: number) {
+    return tileSz + idx * tileSz - tileSz / 2;
+  }
+  renderMapScoreAndState(
+    startPoint: [number, number],
+    endPoint: [number, number],
+    scoreMap: number[][]
+  ) {
+    for (let i = startPoint[0]; i <= endPoint[0]; i++) {
+      for (let j = startPoint[1]; j <= endPoint[1]; j++) {
+        if (this.state[i][j] === -1) {
+          this.inputForA += "0 ";
+        } else {
+          this.inputForA += scoreMap[j][i].toString();
+          this.inputForA += " ";
+        }
+      }
+      this.inputForA += "\n";
+    }
+    if (this.step !== 0) {
+      for (let i = startPoint[0]; i <= endPoint[0]; i++) {
+        for (let j = startPoint[1]; j <= endPoint[1]; j++) {
+          this.inputForA += this.state[i][j].toString();
+          this.inputForA += " ";
+        }
+        this.inputForA += "\n";
+      }
+    }
   }
 }
