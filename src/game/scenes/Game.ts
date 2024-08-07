@@ -13,7 +13,7 @@ const mapIndex = 3;
 const updateDelay = 3000;
 const moveDelay = 450;
 const startCoords = [
-  [2, 2],
+  [2, 3],
   [2, 8],
   [1, 8],
 ];
@@ -507,12 +507,12 @@ export class Game extends Scene {
     if (id === 1) {
       this.player1.x = this.tileToPixel(startX);
       this.player1.y = this.tileToPixel(startY);
-      this.beginPosition1 = [startX, startY];
+      this.beginPosition1 = [startY, startX];
     }
     if (id == 2) {
       this.player2.x = this.tileToPixel(startX);
       this.player2.y = this.tileToPixel(startY);
-      this.beginPosition2 = [startX, startY];
+      this.beginPosition2 = [startY, startX];
     }
   }
   tileToPixel(idx: number) {
