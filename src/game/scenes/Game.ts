@@ -317,7 +317,7 @@ export class Game extends Scene {
       console.log("Input Player2");
       console.log(board[1]);
       await this.RunCode();
-      console.log(this.output[1], this.output[2]);
+      // console.log(this.output[1], this.output[2]);
       if (this.step === 0) {
         this.getCoord(this.output[1], 1);
         this.getCoord(this.output[2], 2);
@@ -495,14 +495,14 @@ export class Game extends Scene {
   getCoord(coordStr: string, id: number) {
     const coord = coordStr.trimEnd().split(" ");
     // console.log(coord);
-    let startX = Number(coord[0]);
-    let startY = Number(coord[1]);
+    let startX = Number(coord[1]);
+    let startY = Number(coord[0]);
     const isValid = startCoords.some(crd => {
-      return startX === crd[0] && startY === crd[1];
+      return startX === crd[1] && startY === crd[0];
     });
     if (!isValid) {
-      startX = startCoords[0][0];
-      startY = startCoords[0][1];
+      startX = startCoords[0][1];
+      startY = startCoords[0][0];
     }
     if (id === 1) {
       this.player1.x = this.tileToPixel(startX);
@@ -586,7 +586,7 @@ export class Game extends Scene {
     playerInput += this.scoreMap.getScore(2).toString() + " \n";
     playerInput += `${beginPosition1[0]} ${beginPosition1[1]} `;
     playerInput += `${beginPosition2[0]} ${beginPosition2[1]} `;
-    playerInput += `${this.step} ${this.totalStep}`;
+    playerInput += `${this.step - 1} ${this.totalStep}`;
     playerInput += "\n";
     return playerInput;
   }
