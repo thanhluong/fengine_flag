@@ -247,7 +247,32 @@ export class Game extends Scene {
   }
   processInput(id: number) {
     this.output[id] = this.output[id].trimEnd();
+
+    const canMove = (id: number) => {
+      let x = this.player1.x;
+      let y = this.player1.y;
+      if (id === 2) {
+        x = this.player2.x;
+        y = this.player2.y;
+      }
+      for(let i = 0; i < this.output[id].length; i++) {
+        if (this.output[id][i] === "L") x -= tileSz;
+        if (this.output[id][i] === "R") x += tileSz;
+        if (this.output[id][i] === "U") y -= tileSz;
+        if (this.output[id][i] === "D") y += tileSz;
+        const tile = this.fences.getTileAtWorldXY(x, y);
+        console.log(x, y, tile, "here");
+        if (tile !== null) return false;
+      }
+      return true;
+    }
     if (this.checkInput(this.output[id])) {
+      if (!canMove(id)) {
+        this.output[id] = "***";
+        if(id === 1) this.movementA += "*";
+        else this.movementB += "*";
+        return;
+      }
       if (id === 1) this.movementA += this.output[id];
       else this.movementB += this.output[id];
       while (this.output[id].length < this.stringLength) {
@@ -297,8 +322,8 @@ export class Game extends Scene {
       await wait(moveDelay);
       this.updateKmove(dt, 2);
       await wait(moveDelay);
-      this.movementA += this.output[1];
-      this.movementB += this.output[2];
+      // this.movementA += this.output[1];
+      // this.movementB += this.output[2];
       // this.renderBoard();
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
