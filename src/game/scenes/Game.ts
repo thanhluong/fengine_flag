@@ -13,10 +13,11 @@ const mapIndex = 3;
 const updateDelay = 3000;
 const moveDelay = 450;
 const startCoords = [
-  [1, 1],
+  [2, 2],
   [2, 8],
   [1, 8],
 ];
+const seperator = "|";
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
@@ -272,18 +273,18 @@ export class Game extends Scene {
     if (this.checkInput(this.output[id])) {
       if (!canMove(id)) {
         this.output[id] = "***";
-        if (id === 1) this.movementA += "*";
-        else this.movementB += "*";
+        if (id === 1) this.movementA += seperator + "*";
+        else this.movementB += seperator + "*";
         return;
       }
-      if (id === 1) this.movementA += this.output[id];
-      else this.movementB += this.output[id];
+      if (id === 1) this.movementA += seperator + this.output[id];
+      else this.movementB += seperator + this.output[id];
       while (this.output[id].length < this.stringLength) {
         this.output[id] += "*";
       }
     } else {
-      if (id === 1) this.movementA += "*";
-      else this.movementB += "*";
+      if (id === 1) this.movementA += seperator + "*";
+      else this.movementB += seperator + "*";
       this.output[id] = "***";
     }
   }
@@ -429,13 +430,19 @@ export class Game extends Scene {
     }
     // history of movement
     if (this.step !== 0) {
-      this.inputForB += this.movementB;
-      this.inputForB += "\n";
-      this.inputForB += this.movementA;
+      const historyA = this.movementA.split(seperator);
+      const historyB = this.movementB.split(seperator);
+      for (let i = 1; i < this.step; i++) {
+        this.inputForA += historyA[i] + " " + historyB[i] + "\n";
+        this.inputForB += historyB[i] + " " + historyA[i] + "\n";
+      }
+      // this.inputForB += this.movementB;
+      // this.inputForB += "\n";
+      // this.inputForB += this.movementA;
 
-      this.inputForA += this.movementA;
-      this.inputForA += "\n";
-      this.inputForA += this.movementB;
+      // this.inputForA += this.movementA;
+      // this.inputForA += "\n";
+      // this.inputForA += this.movementB;
     }
 
     // console.log(this.inputForA);
