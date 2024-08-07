@@ -4,8 +4,6 @@ import StateMachine from "../statemachine/StateMachine";
 import Bomb from "../gameobjects/Bomb";
 import ScoreMap from "./ScoreMap";
 
-const delayPerSpawn = 2000;
-
 const wait = function (time: number) {
   return new Promise(function (resolve, _) {
     setTimeout(resolve, time);
@@ -20,6 +18,7 @@ export default class InputBomb implements IComponent {
   private stateMachine: StateMachine;
   private scene: Scene;
   private scoreMap: ScoreMap;
+  private delaySpawn: number;
   key: string;
   bombs: Physics.Arcade.StaticGroup;
   enemyBombs: Physics.Arcade.StaticGroup;
@@ -28,7 +27,8 @@ export default class InputBomb implements IComponent {
     enemyBombs: Physics.Arcade.StaticGroup,
     enemy: Phaser.Physics.Arcade.Sprite,
     key: string,
-    scroreMap: ScoreMap
+    scroreMap: ScoreMap,
+    delay: number
   ) {
     this.bombs = bombs;
     this.enemyBombs = enemyBombs;
@@ -36,6 +36,7 @@ export default class InputBomb implements IComponent {
     this.key = key;
     this.scoreMap = scroreMap;
     this.stateMachine = new StateMachine(this, "bomb_spawn");
+    this.delaySpawn = (delay * 2) / 3;
   }
   init(go: Phaser.GameObjects.GameObject) {
     this.gameObject = go as Phaser.Physics.Arcade.Sprite;
@@ -65,7 +66,7 @@ export default class InputBomb implements IComponent {
     // this.scene.time.delayedCall(1500, () => {
     //   this.stateMachine.setState("idle");
     // });
-    wait(delayPerSpawn).then(() => this.stateMachine.setState("idle"));
+    wait(this.delaySpawn).then(() => this.stateMachine.setState("idle"));
     if (
       this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
       this.enemyInput === "X"

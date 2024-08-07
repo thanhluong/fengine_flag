@@ -9,8 +9,9 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const moveDelay = 400;
-const updateDelay = 3000;
+const k = 3;
+const updateDelay = 2000;
+const moveDelay = updateDelay / (k + 1);
 
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
@@ -193,7 +194,8 @@ export class Game extends Scene {
       this.bombs2,
       this.player2,
       "bomb",
-      this.scoreMap
+      this.scoreMap,
+      updateDelay
     );
     this.components.addComponent(this.player1, this.inputBomb);
     this.inputComponent = new InputComponent(this.fences);
@@ -214,7 +216,8 @@ export class Game extends Scene {
       this.bombs,
       this.player1,
       "flag-blue",
-      this.scoreMap
+      this.scoreMap,
+      updateDelay
     );
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
@@ -258,9 +261,6 @@ export class Game extends Scene {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;
       wait(updateDelay).then(() => (this.ok = true));
-      // this.time.delayedCall(1000, () => {
-      //   this.ok = true;
-      // });
       if (this.step > this.totalStep) {
         // Out of step => Game over
         this.cameras.main.fadeOut(1500, 0, 0, 0);
@@ -280,14 +280,13 @@ export class Game extends Scene {
       }
       this.renderBoard();
       await this.RunCode();
-      // console.log(this.step, "next");
       this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
 
       this.processInput(1);
       this.processInput(2);
       console.log(this.output[1], this.output[2]);
 
-      // Implement K-moves (without preprocesing input)
+      // Implement K-moves (preprocessed input)
       this.updateKmove(dt, 0);
       await wait(moveDelay);
       this.updateKmove(dt, 1);
@@ -296,7 +295,7 @@ export class Game extends Scene {
       await wait(moveDelay);
       this.movementA += this.output[1];
       this.movementB += this.output[2];
-      this.renderBoard();
+      // this.renderBoard();
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
     if (
