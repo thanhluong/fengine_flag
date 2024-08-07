@@ -59,7 +59,7 @@ export default class ScoreMap {
 
     // tilemap.getLayer('fence');
     const fence = tilemap.getLayer("fence")!.data;
-    console.log(fence);
+    // console.log(fence);
     let step = 200 / this.numberQuantity;
 
     for (let i = this.startPoint[0]; i <= this.endPoint[0]; i++) {
@@ -87,7 +87,7 @@ export default class ScoreMap {
             j * 16,
             16,
             16,
-            Phaser.Display.Color.GetColor(red, green, blue),
+            Phaser.Display.Color.GetColor(red, green, blue)
           )
           .setOrigin(0, 0);
       }
