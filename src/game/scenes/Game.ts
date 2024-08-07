@@ -519,7 +519,7 @@ export class Game extends Scene {
     for (let i = startPoint[0]; i <= endPoint[0]; i++) {
       for (let j = startPoint[1]; j <= endPoint[1]; j++) {
         if (this.state[i][j] === -1) {
-          this.inputForA += "0 ";
+          this.inputForA += "-1 ";
         } else {
           this.inputForA += scoreMap[j][i].toString();
           this.inputForA += " ";
@@ -530,6 +530,10 @@ export class Game extends Scene {
     if (this.step !== 0) {
       for (let i = startPoint[0]; i <= endPoint[0]; i++) {
         for (let j = startPoint[1]; j <= endPoint[1]; j++) {
+          if (this.state[i][j] === -1) {
+            this.inputForA += "0 ";
+            continue;
+          }
           this.inputForA += this.state[i][j].toString();
           this.inputForA += " ";
         }
