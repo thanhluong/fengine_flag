@@ -23,6 +23,21 @@ const startCoords6 = [
   [2, 15],
   [15, 2],
 ];
+const startCoords7 = [
+  [5, 13],
+  [13, 4],
+  [13, 13],
+];
+const startCoords8 = [
+  [6, 5],
+  [10, 15],
+  [12, 5],
+];
+const startCoords9 = [
+  [8, 8],
+  [8, 9],
+  [8, 10],
+];
 const startCoords = [
   [2, 3],
   [2, 8],
