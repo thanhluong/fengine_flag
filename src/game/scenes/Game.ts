@@ -392,7 +392,7 @@ export class Game extends Scene {
     // get position of player 1 and player 2
     let blockSize = this.scoreMap.getBlockSize();
 
-    this.inputForB = this.inputForA;
+    // this.inputForB = this.inputForA;
     if (this.step !== 0) {
       this.inputForA = this.renderPostition(
         blockSize,
@@ -520,24 +520,34 @@ export class Game extends Scene {
       for (let j = startPoint[1]; j <= endPoint[1]; j++) {
         if (this.state[i][j] === -1) {
           this.inputForA += "-1 ";
+          this.inputForB += "-1 ";
         } else {
           this.inputForA += scoreMap[j][i].toString();
           this.inputForA += " ";
+          this.inputForB += " ";
         }
       }
       this.inputForA += "\n";
+      this.inputForB += "\n";
     }
     if (this.step !== 0) {
       for (let i = startPoint[0]; i <= endPoint[0]; i++) {
         for (let j = startPoint[1]; j <= endPoint[1]; j++) {
           if (this.state[i][j] === -1) {
             this.inputForA += "0 ";
+            this.inputForB += "0 ";
             continue;
           }
-          this.inputForA += this.state[i][j].toString();
+          let flagValue = this.state[i][j].toString();
+          this.inputForA += flagValue;
           this.inputForA += " ";
+          if (flagValue === "1") flagValue = "2";
+          else if (flagValue === "2") flagValue = "1";
+          this.inputForB += flagValue;
+          this.inputForB += " ";
         }
         this.inputForA += "\n";
+        this.inputForB += "\n";
       }
     }
     // console.log("render map", this.inputForA);
