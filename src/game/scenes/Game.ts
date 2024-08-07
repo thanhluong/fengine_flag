@@ -505,13 +505,13 @@ export class Game extends Scene {
       startY = startCoords[0][0];
     }
     if (id === 1) {
-      this.player1.x = this.tileToPixel(startX);
-      this.player1.y = this.tileToPixel(startY);
+      this.player1.x = this.tileToPixel(startY);
+      this.player1.y = this.tileToPixel(startX);
       this.beginPosition1 = [startY, startX];
     }
     if (id == 2) {
-      this.player2.x = this.tileToPixel(startX);
-      this.player2.y = this.tileToPixel(startY);
+      this.player2.x = this.tileToPixel(startY);
+      this.player2.y = this.tileToPixel(startX);
       this.beginPosition2 = [startY, startX];
     }
   }
