@@ -12,11 +12,23 @@ import axios from "axios";
 const mapIndex = 9;
 const updateDelay = 3000;
 const moveDelay = 450;
+
+const startCoords5 = [
+  [2, 8],
+  [7, 15],
+  [14, 7],
+];
+const startCoords6 = [
+  [2, 2],
+  [2, 15],
+  [15, 2],
+];
 const startCoords = [
   [2, 3],
   [2, 8],
   [1, 8],
 ];
+
 const seperator = "|";
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
