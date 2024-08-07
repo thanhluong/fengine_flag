@@ -281,12 +281,12 @@ export class Game extends Scene {
       }
       this.renderBoard();
       await this.RunCode();
-      this.textStepContent.setText(`${this.step++}/${this.totalStep}`);
-
+      if (this.step === 1) {
+      }
+      this.textStepContent.setText(`${this.step}/${this.totalStep}`);
       this.processInput(1);
       this.processInput(2);
       console.log(this.output[1], this.output[2]);
-
       // Implement K-moves (preprocessed input)
       this.updateKmove(dt, 0);
       await wait(moveDelay);
@@ -297,6 +297,7 @@ export class Game extends Scene {
       this.movementA += this.output[1];
       this.movementB += this.output[2];
       // this.renderBoard();
+      this.step++;
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
     if (
