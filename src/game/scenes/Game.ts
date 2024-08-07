@@ -524,6 +524,7 @@ export class Game extends Scene {
         } else {
           this.inputForA += scoreMap[j][i].toString();
           this.inputForA += " ";
+          this.inputForB += scoreMap[j][i].toString();
           this.inputForB += " ";
         }
       }
