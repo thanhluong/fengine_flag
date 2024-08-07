@@ -7,7 +7,7 @@ export default class ScoreMap {
   blockSize: number = 16;
   startPoint: [number, number] = [1, 1];
   endPoint: [number, number] = [16, 16];
-  numberQuantity = 15;
+  numberQuantity = 7;
 
   scoreArray: number[][][];
   scoreArrayInstance: ScoreArray;
@@ -16,7 +16,7 @@ export default class ScoreMap {
   defaultGreen: number = 255;
   defaultBlue: number = 103;
   fiboNumber: number[] = [
-    0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
+    0, 10, 20, 30, 40, 50, 60, 100, 38, 39, 40, 41, 42, 43, 44, 45,
   ];
   constructor() {
     this.scores = [];
