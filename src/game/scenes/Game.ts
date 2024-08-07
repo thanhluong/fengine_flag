@@ -9,6 +9,9 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
+const moveDelay = 400;
+const updateDelay = 3000;
+
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
   left: Phaser.Input.Keyboard.Key;
@@ -218,39 +221,32 @@ export class Game extends Scene {
     this.components.addComponent(this.player2, this.inputComponent2);
   }
   checkInput(input: string) {
-    if(input.length > this.stringLength) return false;
+    if (input.length > this.stringLength) return false;
     let count = 0;
     let letter = 0;
 
     for (let i = 0; i < input.length; i++) {
-      if(input[i] === "X") count++;
-      for(let j = 0; j < arr.length; j++)
-      {
-        if(input[i] === arr[j]) letter++;
+      if (input[i] === "X") count++;
+      for (let j = 0; j < arr.length; j++) {
+        if (input[i] === arr[j]) letter++;
       }
     }
-    if(letter != input.length) return false;
-    if(count > 1) return false;
-    if(count === 1)
-    {
-      if(input.length > 1) return false;
+    if (letter != input.length) return false;
+    if (count > 1) return false;
+    if (count === 1) {
+      if (input.length > 1) return false;
     }
     return true;
   }
-  processInput(id: number)
-  {
-    if(this.checkInput(this.output[id]))
-    {
-      if(id === 1) this.movementA += this.output[id];
+  processInput(id: number) {
+    if (this.checkInput(this.output[id])) {
+      if (id === 1) this.movementA += this.output[id];
       else this.movementB += this.output[id];
-      while(this.output[id].length < this.stringLength)
-      {
+      while (this.output[id].length < this.stringLength) {
         this.output[id] += "*";
       }
-    }
-    else
-    {
-      if(id === 1) this.movementA += "*";
+    } else {
+      if (id === 1) this.movementA += "*";
       else this.movementB += "*";
       this.output[id] = "***";
     }
@@ -260,7 +256,7 @@ export class Game extends Scene {
     if (this.ok && !this.isPause) {
       this.textNoti.setText("Press SPACE\nto stop");
       this.ok = false;
-      wait(1500).then(() => (this.ok = true));
+      wait(updateDelay).then(() => (this.ok = true));
       // this.time.delayedCall(1000, () => {
       //   this.ok = true;
       // });
@@ -316,17 +312,17 @@ export class Game extends Scene {
 
       // console.log(this.step, "next");
       console.log(this.output[1], " ", this.output[2]);
-      this.processInput(1);
-      this.processInput(2);
+      // this.processInput(1);
+      // this.processInput(2);
       console.log("update");
       console.log(this.output[1], " ", this.output[2]);
       // Implement K-moves (without preprocesing input)
       this.updateKmove(dt, 0);
-      await wait(350);
+      await wait(moveDelay);
       this.updateKmove(dt, 1);
-      await wait(350);
+      await wait(moveDelay);
       this.updateKmove(dt, 2);
-      await wait(350);
+      await wait(moveDelay);
 
       // this.renderBoard();
     }
@@ -421,7 +417,7 @@ export class Game extends Scene {
     this.inputForA += this.movementA;
     this.inputForA += "\n";
     this.inputForA += this.movementB;
-    // console.log(this.inputForA);
+    console.log(this.inputForA);
   }
   async RunCode() {
     const getOutput = async (
