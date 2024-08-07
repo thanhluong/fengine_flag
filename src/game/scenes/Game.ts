@@ -10,7 +10,7 @@ import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const mapIndex = 3;
-const updateDelay = 2000;
+const updateDelay = 2500;
 const moveDelay = 450;
 const startCoords = [
   [1, 1],
@@ -70,8 +70,8 @@ export class Game extends Scene {
   movementA: string = "";
   movementB: string = "";
   totalStep = 64;
-  beginPosition1 = [];
-  beginPosition2 = [];
+  beginPosition1 = [1, 1];
+  beginPosition2 = [1, 1];
   stringLength: number = 3;
   constructor() {
     super("Game");
@@ -310,14 +310,13 @@ export class Game extends Scene {
         });
         return;
       }
-      this.renderBoard();
+      const board = this.renderBoard();
+      console.log("Input Player1\n", board[0]);
+      console.log("Input Player2\n", board[1]);
       await this.RunCode();
       if (this.step === 0) {
-        this.output[1] = "1 8";
-        this.output[2] = "2 8";
         this.getCoord(this.output[1], 1);
         this.getCoord(this.output[2], 2);
-        // this.renderBoard();
         this.step++;
         return;
       }
@@ -334,9 +333,7 @@ export class Game extends Scene {
       await wait(moveDelay);
       this.updateKmove(dt, 2);
       await wait(moveDelay);
-      // this.movementA += this.output[1];
-      // this.movementB += this.output[2];
-      // this.renderBoard();
+      // this.fixFalseCoord();
       this.step++;
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
@@ -379,7 +376,8 @@ export class Game extends Scene {
         if (tile.index !== -1) this.state[i][j] = -1;
       });
     });
-    this.inputForA = this.inputForB = "";
+
+    this.inputForA = this.inputForB = "2\n";
     if (this.step === 0) {
       this.inputForA = this.inputForB = "1\n";
     }
@@ -387,37 +385,44 @@ export class Game extends Scene {
     let endPoint = this.scoreMap.getEndPoint();
     // get point
     this.renderMapScoreAndState(startPoint, endPoint, scoreMap);
+    // console.log("after render", this.inputForA);
     // get position of player 1 and player 2
     let blockSize = this.scoreMap.getBlockSize();
 
     this.inputForB = this.inputForA;
     if (this.step !== 0) {
-      this.inputForA +=
-        `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-        `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-      this.inputForA += this.scoreMap.getScore(1).toString() + " \n";
-      this.inputForA +=
-        `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-        `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-      this.inputForA += this.scoreMap.getScore(2).toString() + " \n";
-
-      this.inputForB +=
-        `${(this.player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-        `${(this.player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-      this.inputForA += this.scoreMap.getScore(2).toString() + " \n";
-      this.inputForB +=
-        `${(this.player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
-        `${(this.player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-      this.inputForB += this.scoreMap.getScore(1).toString() + " \n";
-
-      this.inputForA = `${this.step} ${this.totalStep}`;
-      this.inputForA += "\n";
+      this.inputForA = this.renderPostition(
+        blockSize,
+        startPoint,
+        this.inputForA,
+        this.player1,
+        this.player2,
+        this.beginPosition1,
+        this.beginPosition2
+      );
+      this.inputForB = this.renderPostition(
+        blockSize,
+        startPoint,
+        this.inputForB,
+        this.player2,
+        this.player1,
+        this.beginPosition2,
+        this.beginPosition1
+      );
     }
+
+    // console.log("before", this.inputForA);
 
     if (this.step === 0) {
       startCoords.forEach(
         coord => (this.inputForA += `${coord[0]} ${coord[1]} `)
       );
+      this.inputForA += this.totalStep.toString();
+
+      startCoords.forEach(
+        coord => (this.inputForB += `${coord[0]} ${coord[1]} `)
+      );
+      this.inputForB += this.totalStep.toString();
     }
     // history of movement
     if (this.step !== 0) {
@@ -430,8 +435,8 @@ export class Game extends Scene {
       this.inputForA += this.movementB;
     }
 
-    console.log(this.inputForA);
-    // return this.inputForA;
+    // console.log(this.inputForA);
+    return [this.inputForA, this.inputForB];
   }
   async RunCode() {
     const getOutput = async (
@@ -486,18 +491,19 @@ export class Game extends Scene {
       return startX === crd[0] && startY === crd[1];
     });
     if (!isValid) {
-      startX = this.tileToPixel(startCoords[0][0]);
-      startY = this.tileToPixel(startCoords[0][0]);
+      startX = startCoords[0][0];
+      startY = startCoords[0][1];
     }
     if (id === 1) {
       this.player1.x = this.tileToPixel(startX);
       this.player1.y = this.tileToPixel(startY);
+      this.beginPosition1 = [startX, startY];
     }
     if (id == 2) {
       this.player2.x = this.tileToPixel(startX);
       this.player2.y = this.tileToPixel(startY);
+      this.beginPosition2 = [startX, startY];
     }
-    // console.log(startX, startY);
   }
   tileToPixel(idx: number) {
     return tileSz + idx * tileSz - tileSz / 2;
@@ -527,5 +533,36 @@ export class Game extends Scene {
         this.inputForA += "\n";
       }
     }
+    // console.log("render map", this.inputForA);
+  }
+  fixFalseCoord() {
+    this.player1.x = Math.round(this.player1.x);
+    this.player1.y = Math.round(this.player1.y);
+    this.player2.x = Math.round(this.player2.x);
+    this.player2.y = Math.round(this.player2.y);
+  }
+  renderPostition(
+    blockSize: number,
+    startPoint: [number, number],
+    input: string,
+    player1: Phaser.Physics.Arcade.Sprite,
+    player2: Phaser.Physics.Arcade.Sprite,
+    beginPosition1: number[],
+    beginPosition2: number[]
+  ) {
+    let playerInput = input;
+    playerInput +=
+      `${(player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+    playerInput += this.scoreMap.getScore(1).toString() + " \n";
+    playerInput +=
+      `${(player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
+      `${(player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
+    playerInput += this.scoreMap.getScore(2).toString() + " \n";
+    playerInput += `${beginPosition1[0]} ${beginPosition1[1]} `;
+    playerInput += `${beginPosition2[0]} ${beginPosition2[1]} `;
+    playerInput += `${this.step} ${this.totalStep}`;
+    playerInput += "\n";
+    return playerInput;
   }
 }
