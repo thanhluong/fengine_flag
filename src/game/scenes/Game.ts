@@ -404,7 +404,8 @@ export class Game extends Scene {
         this.player1,
         this.player2,
         this.beginPosition1,
-        this.beginPosition2
+        this.beginPosition2,
+        1
       );
       this.inputForB = this.renderPostition(
         blockSize,
@@ -413,7 +414,8 @@ export class Game extends Scene {
         this.player2,
         this.player1,
         this.beginPosition2,
-        this.beginPosition1
+        this.beginPosition1,
+        2
       );
     }
 
@@ -575,17 +577,18 @@ export class Game extends Scene {
     player1: Phaser.Physics.Arcade.Sprite,
     player2: Phaser.Physics.Arcade.Sprite,
     beginPosition1: number[],
-    beginPosition2: number[]
+    beginPosition2: number[],
+    id: number
   ) {
     let playerInput = input;
     playerInput +=
       `${(player1.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
       `${(player1.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-    playerInput += this.scoreMap.getScore(1).toString() + " \n";
+    playerInput += this.scoreMap.getScore(id).toString() + " \n";
     playerInput +=
       `${(player2.y - blockSize / 2) / blockSize - startPoint[1] + 1} ` +
       `${(player2.x - blockSize / 2) / blockSize - startPoint[0] + 1} `;
-    playerInput += this.scoreMap.getScore(2).toString() + " \n";
+    playerInput += this.scoreMap.getScore(3 - id).toString() + " \n";
     playerInput += `${beginPosition1[0]} ${beginPosition1[1]} `;
     playerInput += `${beginPosition2[0]} ${beginPosition2[1]} `;
     playerInput += `${this.step - 1} ${this.totalStep}`;
