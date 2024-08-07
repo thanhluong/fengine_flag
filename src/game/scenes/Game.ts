@@ -9,6 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
+const mapIndex = 3;
 const k = 3;
 const updateDelay = 2000;
 const moveDelay = updateDelay / (k + 1);
@@ -73,7 +74,10 @@ export class Game extends Scene {
 
   preload() {
     this.load.setPath("assets");
-    this.load.tilemapTiledJSON("tilemap", "Tilemap/tilemap16x16.json");
+    this.load.tilemapTiledJSON(
+      "tilemap",
+      `Tilemap/tilemap16x16ver${mapIndex}.json`
+    );
     this.load.image("grass-ts", "Tilemap/Grass.png");
     this.load.image("fences-ts", "Tilemap/Fences.png");
     this.load.image("bomb", "Character/bomb.png");

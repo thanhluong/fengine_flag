@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tilemap16x16.json",
+    "activeFile": "tilemap.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -69,6 +69,48 @@
         },
         "tilemap16x16.json#Grass": {
             "scaleInDock": 1
+        },
+        "tilemap16x16ver1.json": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 148.66666666666663,
+                "y": 141.16666666666669
+            }
+        },
+        "tilemap16x16ver1.json#Fences": {
+            "scaleInDock": 4
+        },
+        "tilemap16x16ver1.json#Grass": {
+            "scaleInDock": 1
+        },
+        "tilemap16x16ver2.json": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 132,
+                "y": 127.25
+            }
+        },
+        "tilemap16x16ver2.json#Fences": {
+            "scaleInDock": 4
+        },
+        "tilemap16x16ver2.json#Grass": {
+            "scaleInDock": 1
+        },
+        "tilemap16x16ver3.json": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 180,
+                "y": 137.75
+            }
+        },
+        "tilemap16x16ver3.json#Fences": {
+            "scaleInDock": 5.5
+        },
+        "tilemap16x16ver3.json#Grass": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Admin/Desktop/Coding/Phaser/fengine_flag/public/assets/Tilemap",
@@ -81,13 +123,15 @@
     "map.tileWidth": 16,
     "map.width": 40,
     "openFiles": [
-        "tilemap.json",
-        "tilemap16x16.json"
+        "tilemap.json"
     ],
     "project": "map.tiled-project",
     "property.type": "bool",
     "recentFiles": [
         "tilemap.json",
+        "tilemap16x16ver1.json",
+        "tilemap16x16ver2.json",
+        "tilemap16x16ver3.json",
         "tilemap16x16.json",
         "map.json",
         "map.tmx"
