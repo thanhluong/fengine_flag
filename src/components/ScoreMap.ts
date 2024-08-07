@@ -1,4 +1,4 @@
-import {ScoreArray} from './ScoreArray';
+import { ScoreArray } from "./ScoreArray";
 export default class ScoreMap {
   scores: number[][];
   state: number[][];
@@ -15,7 +15,9 @@ export default class ScoreMap {
   defaultRed: number = 255;
   defaultGreen: number = 255;
   defaultBlue: number = 103;
-  fiboNumber: number[] = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610];
+  fiboNumber: number[] = [
+    0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610,
+  ];
   constructor() {
     this.scores = [];
     this.state = [];
@@ -56,7 +58,7 @@ export default class ScoreMap {
     this.scores = this.scoreArrayInstance.getScoreArray(this.idArray);
 
     // tilemap.getLayer('fence');
-    const fence = tilemap.getLayer('fence')!.data;
+    const fence = tilemap.getLayer("fence")!.data;
     console.log(fence);
     let step = 200 / this.numberQuantity;
 
@@ -64,20 +66,17 @@ export default class ScoreMap {
       for (let j = this.startPoint[1]; j <= this.endPoint[1]; j++) {
         let count = -1;
 
-        for(let k = 1; k <= this.numberQuantity; k++)
-        {
-          if(this.scores[i][j] === this.fiboNumber[k])
-          {
+        for (let k = 1; k <= this.numberQuantity; k++) {
+          if (this.scores[i][j] === this.fiboNumber[k]) {
             count = k;
             break;
           }
         }
-        let red = 255;
-        let green = 200 - count * step;
+        let red = 200 - count * step;
+        let green = 255;
         let blue = 0;
 
-        if(this.scores[i][j] === 0 || fence[j][i].index !== -1)
-        {
+        if (this.scores[i][j] === 0 || fence[j][i].index !== -1) {
           red = this.defaultRed;
           green = this.defaultGreen;
           blue = this.defaultBlue;
