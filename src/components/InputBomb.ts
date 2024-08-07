@@ -27,8 +27,7 @@ export default class InputBomb implements IComponent {
     enemyBombs: Physics.Arcade.StaticGroup,
     enemy: Phaser.Physics.Arcade.Sprite,
     key: string,
-    scroreMap: ScoreMap,
-    delay: number
+    scroreMap: ScoreMap
   ) {
     this.bombs = bombs;
     this.enemyBombs = enemyBombs;
@@ -36,7 +35,7 @@ export default class InputBomb implements IComponent {
     this.key = key;
     this.scoreMap = scroreMap;
     this.stateMachine = new StateMachine(this, "bomb_spawn");
-    this.delaySpawn = (delay * 2) / 3;
+    this.delaySpawn = 1500;
   }
   init(go: Phaser.GameObjects.GameObject) {
     this.gameObject = go as Phaser.Physics.Arcade.Sprite;
