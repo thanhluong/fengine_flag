@@ -311,11 +311,11 @@ export class Game extends Scene {
       // } else this.movementB += "*";
 
       // console.log(this.step, "next");
-      console.log(this.output[1], " ", this.output[2]);
+      // console.log(this.output[1], " ", this.output[2]);
       // this.processInput(1);
       // this.processInput(2);
       console.log("update");
-      console.log(this.output[1], " ", this.output[2]);
+      console.log(this.output[1], this.output[2]);
       // Implement K-moves (without preprocesing input)
       this.updateKmove(dt, 0);
       await wait(moveDelay);
@@ -323,8 +323,9 @@ export class Game extends Scene {
       await wait(moveDelay);
       this.updateKmove(dt, 2);
       await wait(moveDelay);
-
-      // this.renderBoard();
+      this.movementA += this.output[1];
+      this.movementB += this.output[2];
+      this.renderBoard();
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
     if (

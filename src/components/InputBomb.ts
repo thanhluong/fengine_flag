@@ -55,6 +55,7 @@ export default class InputBomb implements IComponent {
   idleOnUpdate() {
     if (this.userInput === "X") {
       console.log("Start set bomb");
+      this.userInput = "";
       this.stateMachine.setState("spawn");
     }
   }
@@ -62,7 +63,7 @@ export default class InputBomb implements IComponent {
     // this.scene.time.delayedCall(1500, () => {
     //   this.stateMachine.setState("idle");
     // });
-    wait(1500).then(() => this.stateMachine.setState("idle"));
+    wait(2000).then(() => this.stateMachine.setState("idle"));
     if (
       this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
       this.enemyInput === "X"
