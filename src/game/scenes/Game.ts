@@ -311,9 +311,12 @@ export class Game extends Scene {
         return;
       }
       const board = this.renderBoard();
-      console.log("Input Player1\n", board[0]);
-      console.log("Input Player2\n", board[1]);
+      console.log("Input Player1");
+      console.log(board[0]);
+      console.log("Input Player2");
+      console.log(board[1]);
       await this.RunCode();
+      console.log(this.output[1], this.output[2]);
       if (this.step === 0) {
         this.getCoord(this.output[1], 1);
         this.getCoord(this.output[2], 2);
@@ -373,7 +376,7 @@ export class Game extends Scene {
     }
     this.map.getLayer("fence")?.data.forEach((row, i) => {
       row.forEach((tile, j) => {
-        if (tile.index !== -1) this.state[i][j] = -1;
+        if (tile.index !== -1) this.state[i][j] = 0;
       });
     });
 
