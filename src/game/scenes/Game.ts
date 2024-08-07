@@ -233,6 +233,7 @@ export class Game extends Scene {
   }
   checkInput(input: string) {
     if (input.length > this.stringLength) return false;
+    if (!input.length) return false;
     let count = 0;
     let letter = 0;
 
@@ -321,6 +322,7 @@ export class Game extends Scene {
       if (this.step === 0) {
         this.getCoord(this.output[1], 1);
         this.getCoord(this.output[2], 2);
+        console.log(this.output[1], this.output[2]);
         this.step++;
         return;
       }
