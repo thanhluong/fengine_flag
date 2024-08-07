@@ -11,7 +11,7 @@ export default class ScoreMap {
 
   scoreArray: number[][][];
   scoreArrayInstance: ScoreArray;
-  idArray: number = 6;
+  idArray: number = 7;
   defaultRed: number = 255;
   defaultGreen: number = 255;
   defaultBlue: number = 103;
