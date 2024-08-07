@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 5;
+const mapIndex = 6;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords5;
+const startCoords = startCoords6;
 
 const seperator = "|";
 export interface WASDKeys {
