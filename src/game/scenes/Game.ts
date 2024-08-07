@@ -10,9 +10,8 @@ import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
 const mapIndex = 3;
-const k = 3;
-const updateDelay = 2000;
-const moveDelay = updateDelay / (k + 1);
+const updateDelay = 3000;
+const moveDelay = 450;
 
 export interface WASDKeys {
   up: Phaser.Input.Keyboard.Key;
@@ -198,8 +197,7 @@ export class Game extends Scene {
       this.bombs2,
       this.player2,
       "bomb",
-      this.scoreMap,
-      updateDelay
+      this.scoreMap
     );
     this.components.addComponent(this.player1, this.inputBomb);
     this.inputComponent = new InputComponent(this.fences);
@@ -220,8 +218,7 @@ export class Game extends Scene {
       this.bombs,
       this.player1,
       "flag-blue",
-      this.scoreMap,
-      updateDelay
+      this.scoreMap
     );
     this.components.addComponent(this.player2, this.inputBomb2);
     this.inputComponent2 = new InputComponent(this.fences);
