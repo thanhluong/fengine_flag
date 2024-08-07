@@ -38,11 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = [
-  [2, 3],
-  [2, 8],
-  [1, 8],
-];
+const startCoords = startCoords5;
 
 const seperator = "|";
 export interface WASDKeys {
