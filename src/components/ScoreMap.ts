@@ -102,6 +102,12 @@ export default class ScoreMap {
             Phaser.Display.Color.GetColor(red, green, blue),
           )
           .setOrigin(0, 0);
+        if (this.scores[i][j] > 0)
+          scene.add
+            .text(i * 16, j * 16, this.scores[i][j].toString(), {
+              fontSize: 10,
+            })
+            .setOrigin(0, 0);
       }
     }
   }
