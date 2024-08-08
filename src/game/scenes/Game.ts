@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 5;
+const mapIndex = 6;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords5;
+const startCoords = startCoords6;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -275,11 +275,13 @@ export class Game extends Scene {
         x = this.player2.x;
         y = this.player2.y;
       }
-      for (let i = 0; i < this.output[id].length; i++) {
-        if (this.output[id][i] === "L") x -= tileSz;
-        if (this.output[id][i] === "R") x += tileSz;
-        if (this.output[id][i] === "U") y -= tileSz;
-        if (this.output[id][i] === "D") y += tileSz;
+      let tmp = this.output[id];
+      // while (tmp.length < 3) tmp = "#" + tmp;
+      for (let i = 0; i < tmp.length; i++) {
+        if (tmp[i] === "L") x -= tileSz;
+        if (tmp[i] === "R") x += tileSz;
+        if (tmp[i] === "U") y -= tileSz;
+        if (tmp[i] === "D") y += tileSz;
         const tile = this.fences.getTileAtWorldXY(x, y);
         // console.log(x, y, tile, "here");
         if (tile !== null) return false;
@@ -296,7 +298,7 @@ export class Game extends Scene {
       if (id === 1) this.movementA += seperator + this.output[id];
       else this.movementB += seperator + this.output[id];
       while (this.output[id].length < this.stringLength) {
-        this.output[id] += "*";
+        this.output[id] = "*" + this.output[id];
       }
     } else {
       if (id === 1) this.movementA += seperator + "*";
