@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 9;
+const mapIndex = 5;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords9;
+const startCoords = startCoords5;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -138,7 +138,7 @@ export class Game extends Scene {
     const grassTileset = this.map.addTilesetImage("Grass", "grass-ts");
     const fencesTileset = this.map.addTilesetImage("Fences", "fences-ts");
     this.grass = this.map.createLayer("grass", grassTileset!)!;
-    this.scoreMap = new ScoreMap();
+    this.scoreMap = new ScoreMap(startCoords);
     this.scoreMap.create();
     this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;

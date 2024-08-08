@@ -11,16 +11,20 @@ export default class ScoreMap {
 
   scoreArray: number[][][];
   scoreArrayInstance: ScoreArray;
-  idArray: number = 9;
+  idArray: number = 5;
   defaultRed: number = 255;
   defaultGreen: number = 255;
   defaultBlue: number = 103;
   fiboNumber: number[] = [
     0, 10, 20, 30, 40, 50, 60, 100, 38, 39, 40, 41, 42, 43, 44, 45,
   ];
-  constructor() {
+  startCoords: [[number, number], [number, number], [number, number]];
+  constructor(
+    startCoords: [[number, number], [number, number], [number, number]],
+  ) {
     this.scores = [];
     this.state = [];
+    this.startCoords = startCoords;
 
     for (let i = 0; i < 20; i++) {
       this.scores[i] = [];
@@ -80,6 +84,14 @@ export default class ScoreMap {
           red = this.defaultRed;
           green = this.defaultGreen;
           blue = this.defaultBlue;
+        }
+        for (let k = 0; k < 3; k++) {
+          if (j == this.startCoords[k][0] && i == this.startCoords[k][1]) {
+            red = 0;
+            green = 255;
+            blue = 255;
+            break;
+          }
         }
         scene.add
           .rectangle(
