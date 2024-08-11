@@ -11,7 +11,7 @@ export default class ScoreMap {
 
   scoreArray: number[][][];
   scoreArrayInstance: ScoreArray;
-  idArray: number = 7;
+  idArray: number = 8;
   defaultRed: number = 255;
   defaultGreen: number = 255;
   defaultBlue: number = 103;
@@ -106,6 +106,7 @@ export default class ScoreMap {
           scene.add
             .text(i * 16, j * 16, this.scores[i][j].toString(), {
               fontSize: 10,
+              color: "red",
             })
             .setOrigin(0, 0);
       }

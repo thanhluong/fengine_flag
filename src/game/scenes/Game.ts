@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 7;
+const mapIndex = 8;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords7;
+const startCoords = startCoords8;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -163,8 +163,8 @@ export class Game extends Scene {
     });
     this.add.image(340, 85, "cute1").setOrigin(0, 0.5);
     this.textP1 = this.add.text(310, 80, "\nScore:0\nMove:", {
-      color: "#000",
-      fontSize: 12,
+      color: "red",
+      fontSize: 15,
     });
     this.textP2Header = this.add.text(310, 140, "PLAYER", {
       color: "#000",
@@ -173,8 +173,8 @@ export class Game extends Scene {
     });
     this.add.image(340, 145, "cute2").setOrigin(0, 0.5);
     this.textP2 = this.add.text(310, 140, "\nScore:0\nMove:", {
-      color: "#000",
-      fontSize: 12,
+      color: "red",
+      fontSize: 15,
     });
     this.textNoti = this.add.text(300, 240, "Press SPACE\nto start", {
       color: "#000",
