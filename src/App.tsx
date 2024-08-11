@@ -141,7 +141,7 @@ function App() {
               theme={tokyoNight}
               value={cppCode}
               height="400px"
-              width="150px"
+              width="350px"
               extensions={[cpp()]}
               onChange={onCodeChange}
             />
