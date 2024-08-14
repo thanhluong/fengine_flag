@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 9;
+const mapIndex = 8;
 const updateDelay = 3000;
 const moveDelay = 450;
 
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords9;
+const startCoords = startCoords8;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -93,7 +93,7 @@ export class Game extends Scene {
   inputForB: string;
   movementA: string = "";
   movementB: string = "";
-  totalStep = 64;
+  totalStep = 32;
   beginPosition1 = [1, 1];
   beginPosition2 = [1, 1];
   stringLength: number = 3;
@@ -138,7 +138,7 @@ export class Game extends Scene {
     const grassTileset = this.map.addTilesetImage("Grass", "grass-ts");
     const fencesTileset = this.map.addTilesetImage("Fences", "fences-ts");
     this.grass = this.map.createLayer("grass", grassTileset!)!;
-    this.scoreMap = new ScoreMap();
+    this.scoreMap = new ScoreMap(startCoords);
     this.scoreMap.create();
     this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;
@@ -163,8 +163,8 @@ export class Game extends Scene {
     });
     this.add.image(340, 85, "cute1").setOrigin(0, 0.5);
     this.textP1 = this.add.text(310, 80, "\nScore:0\nMove:", {
-      color: "#000",
-      fontSize: 12,
+      color: "red",
+      fontSize: 15,
     });
     this.textP2Header = this.add.text(310, 140, "PLAYER", {
       color: "#000",
@@ -173,8 +173,8 @@ export class Game extends Scene {
     });
     this.add.image(340, 145, "cute2").setOrigin(0, 0.5);
     this.textP2 = this.add.text(310, 140, "\nScore:0\nMove:", {
-      color: "#000",
-      fontSize: 12,
+      color: "red",
+      fontSize: 15,
     });
     this.textNoti = this.add.text(300, 240, "Press SPACE\nto start", {
       color: "#000",
@@ -275,11 +275,13 @@ export class Game extends Scene {
         x = this.player2.x;
         y = this.player2.y;
       }
-      for (let i = 0; i < this.output[id].length; i++) {
-        if (this.output[id][i] === "L") x -= tileSz;
-        if (this.output[id][i] === "R") x += tileSz;
-        if (this.output[id][i] === "U") y -= tileSz;
-        if (this.output[id][i] === "D") y += tileSz;
+      let tmp = this.output[id];
+      // while (tmp.length < 3) tmp = "#" + tmp;
+      for (let i = 0; i < tmp.length; i++) {
+        if (tmp[i] === "L") x -= tileSz;
+        if (tmp[i] === "R") x += tileSz;
+        if (tmp[i] === "U") y -= tileSz;
+        if (tmp[i] === "D") y += tileSz;
         const tile = this.fences.getTileAtWorldXY(x, y);
         // console.log(x, y, tile, "here");
         if (tile !== null) return false;
@@ -296,7 +298,7 @@ export class Game extends Scene {
       if (id === 1) this.movementA += seperator + this.output[id];
       else this.movementB += seperator + this.output[id];
       while (this.output[id].length < this.stringLength) {
-        this.output[id] += "*";
+        this.output[id] = "*" + this.output[id];
       }
     } else {
       if (id === 1) this.movementA += seperator + "*";
