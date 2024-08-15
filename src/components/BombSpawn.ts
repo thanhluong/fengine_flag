@@ -1,8 +1,8 @@
-import Phaser, { Physics, Scene } from 'phaser';
-import { IComponent } from '../service/ComponentService';
-import StateMachine from '../statemachine/StateMachine';
-import Bomb from '../gameobjects/Bomb';
-import { WASDKeys } from '../game/scenes/Game';
+import Phaser, { Physics, Scene } from "phaser";
+import { IComponent } from "../service/ComponentService";
+import StateMachine from "../statemachine/StateMachine";
+import Bomb from "../gameobjects/Bomb";
+import { WASDKeys } from "../game/scenes/Game";
 
 export default class BombSpawn implements IComponent {
   private readonly cursors: WASDKeys;
@@ -13,20 +13,20 @@ export default class BombSpawn implements IComponent {
   constructor(cursors: WASDKeys, bombs: Physics.Arcade.StaticGroup) {
     this.cursors = cursors;
     this.bombs = bombs;
-    this.stateMachine = new StateMachine(this, 'bomb_spawn');
+    this.stateMachine = new StateMachine(this, "bomb_spawn");
   }
   init(go: Phaser.GameObjects.GameObject) {
     this.gameObject = go as Phaser.Physics.Arcade.Sprite;
     this.scene = this.gameObject.scene;
     this.stateMachine
-      .addState('idle', {
+      .addState("idle", {
         onEnter: this.idleOnEnter,
         onUpdate: this.idleOnUpdate,
       })
-      .addState('spawn', {
+      .addState("spawn", {
         onEnter: this.spawnOnEnter,
       })
-      .setState('idle');
+      .setState("idle");
   }
   update(dt: number) {
     this.stateMachine.update(dt);
@@ -34,7 +34,7 @@ export default class BombSpawn implements IComponent {
   idleOnEnter() {}
   idleOnUpdate() {
     if (this.cursors.space.isDown) {
-      this.stateMachine.setState('spawn');
+      this.stateMachine.setState("spawn");
     }
   }
   spawnOnEnter() {
@@ -42,7 +42,7 @@ export default class BombSpawn implements IComponent {
       this.scene,
       this.gameObject.x,
       this.gameObject.y,
-      'bomb'
+      "bomb"
     );
 
     this.bombs.add(bomb);
@@ -54,7 +54,7 @@ export default class BombSpawn implements IComponent {
     // );
 
     this.scene.time.delayedCall(500, () => {
-      this.stateMachine.setState('idle');
+      this.stateMachine.setState("idle");
     });
   }
 

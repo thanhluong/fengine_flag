@@ -9,16 +9,16 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 8;
+const mapIndex = 6;
 const updateDelay = 3000;
-const moveDelay = 450;
+const moveDelay = 150;
 
 const startCoords5 = [
   [2, 8],
   [7, 15],
   [14, 7],
 ];
-const startCoords6 = [
+const startCoords6: [[number, number], [number, number], [number, number]] = [
   [2, 2],
   [2, 15],
   [15, 2],
@@ -38,7 +38,7 @@ const startCoords9 = [
   [8, 9],
   [8, 10],
 ];
-const startCoords = startCoords8;
+const startCoords = startCoords6;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -107,6 +107,7 @@ export class Game extends Scene {
       "tilemap",
       `Tilemap/tilemap16x16ver${mapIndex}.json`
     );
+    // this.load.tilemapTiledJSON("tilemap", `Tilemap/tilemap.json`);
     this.load.image("grass-ts", "Tilemap/Grass.png");
     this.load.image("fences-ts", "Tilemap/Fences.png");
     this.load.image("bomb", "Character/bomb.png");
@@ -138,7 +139,7 @@ export class Game extends Scene {
     const grassTileset = this.map.addTilesetImage("Grass", "grass-ts");
     const fencesTileset = this.map.addTilesetImage("Fences", "fences-ts");
     this.grass = this.map.createLayer("grass", grassTileset!)!;
-    this.scoreMap = new ScoreMap(startCoords);
+    this.scoreMap = new ScoreMap(startCoords6);
     this.scoreMap.create();
     this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;
@@ -222,8 +223,8 @@ export class Game extends Scene {
       this.scoreMap
     );
     this.components.addComponent(this.player1, this.inputBomb);
-    this.inputComponent = new InputComponent(this.fences);
-    this.components.addComponent(this.player1, this.inputComponent);
+    this.inputComponent = new InputComponent(this.fences, this.player1);
+    // this.components.addComponent(this.player1, this.inputComponent);
 
     // Add player2 components
     this.components.addComponent(
@@ -243,8 +244,8 @@ export class Game extends Scene {
       this.scoreMap
     );
     this.components.addComponent(this.player2, this.inputBomb2);
-    this.inputComponent2 = new InputComponent(this.fences);
-    this.components.addComponent(this.player2, this.inputComponent2);
+    this.inputComponent2 = new InputComponent(this.fences, this.player2);
+    // this.components.addComponent(this.player2, this.inputComponent2);
   }
   checkInput(input: string) {
     if (input.length > this.stringLength) return false;
@@ -350,15 +351,14 @@ export class Game extends Scene {
 
       console.log(this.output[1], this.output[2]);
       // Implement K-moves (preprocessed input)
-      this.updateKmove(dt, 0);
+      await this.updateKmove(dt, 0);
       await wait(moveDelay);
-      this.fixFalseCoord();
-      this.updateKmove(dt, 1);
+      // this.fixFalseCoord();
+      await this.updateKmove(dt, 1);
       await wait(moveDelay);
-      this.fixFalseCoord();
-      this.updateKmove(dt, 2);
+      // this.fixFalseCoord();
+      await this.updateKmove(dt, 2);
       await wait(moveDelay);
-      this.fixFalseCoord();
       // this.fixFalseCoord();
       this.step++;
     }
@@ -452,7 +452,8 @@ export class Game extends Scene {
       );
       this.inputForB += this.totalStep.toString();
     }
-    // history of movement
+    // History of movement
+
     if (this.step !== 0) {
       const historyA = this.movementA.split(seperator);
       const historyB = this.movementB.split(seperator);
@@ -460,13 +461,6 @@ export class Game extends Scene {
         this.inputForA += historyA[i] + " " + historyB[i] + "\n";
         this.inputForB += historyB[i] + " " + historyA[i] + "\n";
       }
-      // this.inputForB += this.movementB;
-      // this.inputForB += "\n";
-      // this.inputForB += this.movementA;
-
-      // this.inputForA += this.movementA;
-      // this.inputForA += "\n";
-      // this.inputForA += this.movementB;
     }
 
     // console.log(this.inputForA);
@@ -501,13 +495,15 @@ export class Game extends Scene {
       localStorage.getItem("languageB")!
     );
   }
-  updateKmove(dt: number, k: number) {
+  async updateKmove(dt: number, k: number) {
     // console.log("Player 1 output ", this.output[1]);
     this.inputComponent.importInput(this.output[1][k]);
     this.inputBomb.importInput(this.output[1][k], this.output[2][k]);
     this.inputComponent2.importInput(this.output[2][k]);
     this.inputBomb2.importInput(this.output[2][k], this.output[1][k]);
     this.components.update(dt);
+    this.inputComponent.update();
+    await this.inputComponent2.update();
     this.textP1.setText(
       `\nScore:${this.scoreMap.getScore(1)} \nMove:${this.output[1]?.charAt(k) ?? ""}`
     );

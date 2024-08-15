@@ -11,12 +11,16 @@ export default class InputComponent implements IComponent {
   init(go: Phaser.Physics.Arcade.Sprite) {
     this.gameObject = go;
   }
-  constructor(fences: Phaser.Tilemaps.TilemapLayer) {
+  constructor(
+    fences: Phaser.Tilemaps.TilemapLayer,
+    go: Phaser.Physics.Arcade.Sprite
+  ) {
     this.fences = fences;
+    this.init(go);
   }
-  update() {
+  async update() {
     if (this.userInput !== "") {
-      this.render(this.userInput);
+      await this.render(this.userInput);
       this.userInput = "";
     }
   }
@@ -50,28 +54,57 @@ export default class InputComponent implements IComponent {
     }
     const tile = this.fences.getTileAtWorldXY(nextPostition.x, nextPostition.y);
     if (tile == null) {
-      scene.tweens.add({
-        targets: this.gameObject,
-        x: nextPostition.x,
-        y: nextPostition.y,
-        duration: baseMoveTime,
-        onUpdate: this.playAnim.bind(this, key),
-        onComplete: this.playAnim.bind(this, "idle"),
+      return new Promise((resolve, _) => {
+        scene.tweens.add({
+          targets: this.gameObject,
+          x: nextPostition.x,
+          y: nextPostition.y,
+          duration: baseMoveTime,
+          onUpdate: this.playAnim.bind(this, key),
+          onComplete: this.resolveAnimation.bind(_, resolve, this.gameObject),
+        });
       });
-      // console.log(nextPostition.x, nextPostition.y);
     } else {
-      scene.tweens.add({
-        targets: this.gameObject,
-        x: this.gameObject.x,
-        y: this.gameObject.y,
-        duration: baseMoveTime,
-        onUpdate: this.playAnim.bind(this, "idle"),
+      return new Promise((resolve, _) => {
+        scene.tweens.add({
+          targets: this.gameObject,
+          x: this.gameObject.x,
+          y: this.gameObject.y,
+          duration: baseMoveTime,
+          onUpdate: this.playAnim.bind(this, "idle"),
+          onComplete: resolve,
+        });
       });
-      // console.log(this.gameObject.x, this.gameObject.y);
     }
+    // if (tile == null) {
+    //   scene.tweens.add({
+    //     targets: this.gameObject,
+    //     x: nextPostition.x,
+    //     y: nextPostition.y,
+    //     duration: baseMoveTime,
+    //     onUpdate: this.playAnim.bind(this, key),
+    //     onComplete: this.playAnim.bind(this, "idle"),
+    //   });
+    //   // console.log(nextPostition.x, nextPostition.y);
+    // } else {
+    //   scene.tweens.add({
+    //     targets: this.gameObject,
+    //     x: this.gameObject.x,
+    //     y: this.gameObject.y,
+    //     duration: baseMoveTime,
+    //     onUpdate: this.playAnim.bind(this, "idle"),
+    //   });
+    // }
   }
   playAnim(key: string) {
     // console.log(this.gameObject);
     key && this.gameObject.play(key, true);
+  }
+  resolveAnimation(
+    resolve: (value: unknown) => void,
+    gameObject: Phaser.Physics.Arcade.Sprite
+  ) {
+    gameObject.play("idle");
+    resolve("");
   }
 }

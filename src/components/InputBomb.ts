@@ -65,12 +65,14 @@ export default class InputBomb implements IComponent {
     // this.scene.time.delayedCall(1500, () => {
     //   this.stateMachine.setState("idle");
     // });
-    wait(this.delaySpawn).then(() => this.stateMachine.setState("idle"));
+    // wait(this.delaySpawn).then(() => this.stateMachine.setState("idle"));
     if (
       this.checkEnemyAt(this.gameObject.x, this.gameObject.y) &&
       this.enemyInput === "X"
-    )
+    ) {
+      this.stateMachine.setState("idle");
       return; // 2 player cannot spawn bomb at the same time and place
+    }
     const enemyBomb = this.getEnemyBomb(this.gameObject.x, this.gameObject.y);
     if (this.key === "bomb") {
       this.scoreMap.setState(this.gameObject.x, this.gameObject.y, 1);
@@ -88,6 +90,7 @@ export default class InputBomb implements IComponent {
       );
       this.bombs.add(bomb);
     }
+    this.stateMachine.setState("idle");
   }
   importInput(userInput: string, enemyInput: string) {
     this.userInput = userInput;

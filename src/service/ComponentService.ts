@@ -1,5 +1,5 @@
-import Phaser from 'phaser';
-import short from 'short-uuid';
+import Phaser from "phaser";
+import short from "short-uuid";
 
 export interface IComponent {
   init(go: Phaser.GameObjects.GameObject): void;
