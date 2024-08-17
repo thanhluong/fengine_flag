@@ -96,7 +96,7 @@ export class Game extends Scene {
   totalStep = 32;
   beginPosition1 = [1, 1];
   beginPosition2 = [1, 1];
-  stringLength: number = 3;
+  stringLength: number = 2;
   constructor() {
     super("Game");
   }
@@ -353,13 +353,10 @@ export class Game extends Scene {
       // Implement K-moves (preprocessed input)
       await this.updateKmove(dt, 0);
       await wait(moveDelay);
-      // this.fixFalseCoord();
       await this.updateKmove(dt, 1);
       await wait(moveDelay);
-      // this.fixFalseCoord();
-      await this.updateKmove(dt, 2);
-      await wait(moveDelay);
-      // this.fixFalseCoord();
+      // await this.updateKmove(dt, 2);
+      // await wait(moveDelay);
       this.step++;
     }
     const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
