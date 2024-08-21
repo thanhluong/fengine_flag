@@ -11,20 +11,19 @@ export default class ScoreMap {
 
   scoreArray: number[][][];
   scoreArrayInstance: ScoreArray;
-  idArray: number = 7;
+  idArray: number;
   defaultRed: number = 255;
   defaultGreen: number = 255;
   defaultBlue: number = 103;
   fiboNumber: number[] = [
     0, 10, 20, 30, 40, 50, 60, 100, 38, 39, 40, 41, 42, 43, 44, 45,
   ];
-  startCoords: [[number, number], [number, number], [number, number]];
-  constructor(
-    startCoords: [[number, number], [number, number], [number, number]],
-  ) {
+  // startCoords: [[number, number], [number, number], [number, number]];
+  constructor(id: number) {
+    this.idArray = id;
     this.scores = [];
     this.state = [];
-    this.startCoords = startCoords;
+    // this.startCoords = startCoords;
 
     for (let i = 0; i < 20; i++) {
       this.scores[i] = [];
@@ -85,21 +84,21 @@ export default class ScoreMap {
           green = this.defaultGreen;
           blue = this.defaultBlue;
         }
-        for (let k = 0; k < 3; k++) {
-          if (j == this.startCoords[k][0] && i == this.startCoords[k][1]) {
-            red = 0;
-            green = 255;
-            blue = 255;
-            break;
-          }
-        }
+        // for (let k = 0; k < 3; k++) {
+        //   if (j == this.startCoords[k][0] && i == this.startCoords[k][1]) {
+        //     red = 0;
+        //     green = 255;
+        //     blue = 255;
+        //     break;
+        //   }
+        // }
         scene.add
           .rectangle(
             i * 16,
             j * 16,
             16,
             16,
-            Phaser.Display.Color.GetColor(red, green, blue),
+            Phaser.Display.Color.GetColor(red, green, blue)
           )
           .setOrigin(0, 0);
         if (this.scores[i][j] > 0)
