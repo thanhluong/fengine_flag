@@ -9,36 +9,36 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 7;
+const mapIndex = 6;
 const updateDelay = 3000;
 const moveDelay = 150;
 
-const startCoords5 = [
-  [2, 8],
-  [7, 15],
-  [14, 7],
-];
-const startCoords6: [[number, number], [number, number], [number, number]] = [
-  [2, 2],
-  [2, 15],
-  [15, 2],
-];
-const startCoords7 = [
-  [5, 13],
-  [13, 4],
-  [13, 13],
-];
-const startCoords8 = [
-  [6, 5],
-  [10, 15],
-  [12, 5],
-];
-const startCoords9 = [
-  [8, 8],
-  [8, 9],
-  [8, 10],
-];
-const startCoords = startCoords7;
+// const startCoords5 = [
+//   [2, 8],
+//   [7, 15],
+//   [14, 7],
+// ];
+// const startCoords6: [[number, number], [number, number], [number, number]] = [
+//   [2, 2],
+//   [2, 15],
+//   [15, 2],
+// ];
+// const startCoords7 = [
+//   [5, 13],
+//   [13, 4],
+//   [13, 13],
+// ];
+// const startCoords8 = [
+//   [6, 5],
+//   [10, 15],
+//   [12, 5],
+// ];
+// const startCoords9 = [
+//   [8, 8],
+//   [8, 9],
+//   [8, 10],
+// ];
+// const startCoords = startCoords7;
 
 const seperator = "|";
 export interface WASDKeys {
@@ -139,7 +139,7 @@ export class Game extends Scene {
     const grassTileset = this.map.addTilesetImage("Grass", "grass-ts");
     const fencesTileset = this.map.addTilesetImage("Fences", "fences-ts");
     this.grass = this.map.createLayer("grass", grassTileset!)!;
-    this.scoreMap = new ScoreMap(startCoords);
+    this.scoreMap = new ScoreMap(mapIndex);
     this.scoreMap.create();
     this.scoreMap.createMap(this, this.map);
     this.fences = this.map.createLayer("fence", fencesTileset!)!;
@@ -185,7 +185,7 @@ export class Game extends Scene {
     // Create sprite
     // PLAYER 1
     let endPoint = this.scoreMap.getEndPoint();
-    let startPoint = this.scoreMap.getStartPoint();
+    // let startPoint = this.scoreMap.getStartPoint();
 
     this.player1 = this.physics.add.sprite(
       tileSz * endPoint[1] + tileSz * 0.5,
@@ -438,17 +438,17 @@ export class Game extends Scene {
 
     // console.log("before", this.inputForA);
 
-    if (this.step === 0) {
-      startCoords.forEach(
-        coord => (this.inputForA += `${coord[0]} ${coord[1]} `)
-      );
-      this.inputForA += this.totalStep.toString();
+    // if (this.step === 0) {
+    //   startCoords.forEach(
+    //     coord => (this.inputForA += `${coord[0]} ${coord[1]} `)
+    //   );
+    //   this.inputForA += this.totalStep.toString();
 
-      startCoords.forEach(
-        coord => (this.inputForB += `${coord[0]} ${coord[1]} `)
-      );
-      this.inputForB += this.totalStep.toString();
-    }
+    //   startCoords.forEach(
+    //     coord => (this.inputForB += `${coord[0]} ${coord[1]} `)
+    //   );
+    //   this.inputForB += this.totalStep.toString();
+    // }
     // History of movement
 
     if (this.step !== 0) {
@@ -511,15 +511,17 @@ export class Game extends Scene {
   }
   getCoord(coordStr: string, id: number) {
     const coord = coordStr.trimEnd().split(" ");
-    // console.log(coord);
     let startX = Number(coord[1]);
     let startY = Number(coord[0]);
-    const isValid = startCoords.some(crd => {
-      return startX === crd[1] && startY === crd[0];
-    });
-    if (!isValid) {
-      startX = startCoords[0][1];
-      startY = startCoords[0][0];
+    const isInMap =
+      startX > 0 && startX < tileSz && startY > 0 && startY < tileSz;
+    const isValid = this.fences.getTileAtWorldXY(
+      this.tileToPixel(startX),
+      this.tileToPixel(startY)
+    );
+    if (isValid != null || !isInMap) {
+      startX = 2;
+      startY = 2;
     }
     if (id === 1) {
       this.player1.x = this.tileToPixel(startX);
