@@ -9,7 +9,7 @@ import ScoreMap from "../../components/ScoreMap.ts";
 import axios from "axios";
 // import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-const mapIndex = 10;
+const mapIndex = 5;
 const updateDelay = 3000;
 const moveDelay = 150;
 
